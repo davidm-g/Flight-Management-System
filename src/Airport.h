@@ -14,6 +14,7 @@ class Airport {
         float  latitude;
         float longitude;
 public:
+    Airport() = default;
     string getCode() ;
     string getCountry() ;
     string getName() ;

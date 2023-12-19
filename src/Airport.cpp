@@ -16,6 +16,9 @@ Airport::Airport(std::string code, std::string name, std::string city, std::stri
 string Airport::getCode() {
     return code;
 }
+string Airport::getCity() {
+    return city;
+}
 string Airport::getName() {
     return name;
 }

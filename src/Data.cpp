@@ -10,6 +10,9 @@ Graph<Airport> Data::getAP(){
 unordered_map<string, Airline> Data::getAirlines() {
     return airlines;
 }
+unordered_map<string, Airport> Data::getAirports() {
+    return airports;
+}
 
 void Data::parse_airports() {
     ifstream apfile("airports.csv");
@@ -28,7 +31,9 @@ void Data::parse_airports() {
         getline(iss, longitude);
         float lat = stof(latitude);
         float lon = stof(longitude);
-        ap.addVertex(Airport(code,name,city,country,lat,lon));
+        Airport aero =Airport(code,name,city,country,lat,lon);
+        ap.addVertex(aero);
+        airports[code]=aero;
     }
 
 }
@@ -66,6 +71,9 @@ void Data::parse_flights() {
         getline(iss, al_code);
 
         ap.addEdge(Airport(src), Airport(target),al_code, 0.0);
+        for (auto a : ap.getVertexSet())
+            if(a->getInfo().getCode() == target)
+                a->setIndegree(a->getIndegree() + 1);
     }
 
 }

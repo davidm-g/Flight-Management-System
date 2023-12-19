@@ -18,12 +18,14 @@ class Data {
     private:
         Graph<Airport> ap;
         std::unordered_map<string,Airline> airlines;
+        std::unordered_map<string,Airport> airports;
     public:
         void parse_airports();
         Graph<Airport> getAP();
         void parse_flights();
         void parse_airlines();
         unordered_map<string, Airline> getAirlines();
+        unordered_map<string, Airport> getAirports();
 };
 
 
