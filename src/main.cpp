@@ -114,7 +114,8 @@ int main() {
                 string acode;
                 cout << "Please enter the desire airport code:\n";
                 cin >> acode;
-                cout << "Airport " << acode << " flies to: " << m.num_countries_airport(acode) << " countries, " << m.num_cities_airport(acode) << " cities and "
+                cout << "Airport " << acode << " flies to: " << m.num_countries_airport(acode)
+                << " countries, " << m.num_cities_airport(acode) << " cities and "
                     << m.num_airports_airport(acode) << " airports.\n";
                 break;
             }
@@ -131,8 +132,112 @@ int main() {
             case 8:{
                 cout << "The maximum number of stops between two airports is: "<<m.graph_diameter()[0].first<<'\n';
                 for(auto p : m.graph_diameter()){
-                    cout << " And that distance is between " <<p.second.first.getName()<< " and "<< p.second.second.getName() << " airports\n";
+                    cout << "And that distance is between " << p.second.first.getName()
+                    << " and "<< p.second.second.getName() << " airports\n";
                 }
+                break;
+            }
+            case 9: {
+                cout<<"Please enter the number of airports to display in terms of number of flights ranking:"<<'\n';
+                int k;
+                cin>>k;
+                cout <<"The top " << k << " airports with the greatest air traffic capacity are: \n";
+                for(auto ap : m.greatest_air_traffic(k)){
+                    cout << ap.second.getName() << " located in " << ap.second.getCity()
+                    << ", " << ap.second.getCountry() <<" with "<< ap.first << " flights.\n";
+                }
+                break;
+            }
+            case 10:  {
+                cout << "The airports that are essential to networks circulation capability are:\n";
+                for(auto ap : m.Articu_points()){
+                    cout << ap.getName() << " located in " << ap.getCity() << ", " << ap.getCountry() << ".\n";
+                }
+                cout << '\n';
+                cout << "There are in total " << m.Articu_points().size() << " essential airports\n";
+                break;
+            }
+            case 11: {
+                cout << "1. Flight between two airports" << '\n';
+                cout << "2. (Temporary) Find nearest airports" << '\n';
+                cout << "Please select your desired method: ";
+                int so;
+                cin >> so;
+
+                switch (so) {
+                    case 1:{
+                        cout << "Please insert a source airport code/name: ";
+                        string source;
+                        cin >> source;
+                        cout << "Please insert a target airport code/name: ";
+                        string target;
+                        cin >> target;
+                        cout << '\n';
+                        cout << "The best flight option between those two airports is:";
+                        for(auto v : m.shortest_distance_airports(source,target)){
+                            for(int i = 0; i < v.size() - 1; i++){
+                                cout << v[i].getName() << " --> ";
+                            }
+                            cout << v[(v.size() - 1)].getName();
+                            cout << "\n";
+                        }
+                        //airport ---> airport
+                        break;
+                    }
+
+                    case 2:{
+                        double lat, lon;
+                        cout << "Latitude:";
+                        cin >> lat;
+                        cout << '\n' << "Longitude:";
+                        cin >> lon; \
+                        cout << '\n';
+                        for(auto ap : m.findNearestAirports(lat, lon))
+                            cout << ap.getName() << '\n';
+                        //airport ---> city
+                        break;
+                    }
+
+                    case 3:{
+                        string apcode;
+                        cin >> apcode;
+                        double lat, lon;
+                        cin >> lat;
+                        cin >> lon;
+                        //airport ---> coordinates
+                        break;
+                    }
+                    case 4:{
+                        //city ---> airport
+                        break;
+                    }
+                    case 5:{
+                        //city ---> city
+                        break;
+                    }
+                    case 6:{
+                        //city ---> coordinates
+                        break;
+                    }
+                    case 7:{
+                        //coordinates ---> airport
+                        break;
+                    }
+                    case 8:{
+                        //coordinates ---> city
+                        break;
+                    }
+                    case 9:{
+                        //coordinates ---> coordinates
+                        break;
+                    }
+
+                    default:{
+                        break;
+                    }
+
+                }
+
                 break;
             }
             case 13: {

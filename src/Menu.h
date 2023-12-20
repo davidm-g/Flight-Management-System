@@ -5,6 +5,9 @@
 #include <vector>
 #include <unordered_set>
 #include <queue>
+#include <set>
+#include <algorithm>
+#include <map>
 
 class Menu {
 private:
@@ -24,6 +27,11 @@ public:
     void dfs_Stops(string acode, int max_stops);
     void dfs_Visit_Stops(Vertex<Airport> * v , int max_stops, unordered_set<string>& countries,unordered_set<string>& cities, int& n_airports, int& n_cities, int& n_countries);
     vector<pair<int,pair<Airport,Airport>>>graph_diameter();
+    vector<pair<int,Airport>> greatest_air_traffic(int k);
+    set<Airport> Articu_points();
+    void dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, int& i);
+    vector<vector<Airport>> shortest_distance_airports(string source, string target);
+    vector<Airport> findNearestAirports(double lat, double lon);
 };
 
 

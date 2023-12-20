@@ -41,3 +41,6 @@ bool Airport::operator==(const Airport &rhs) {
 Airport::Airport(std::string code) {
     this->code = code;
 }
+bool Airport::operator<(const Airport& r) const{
+    return this->name < r.name;
+}

@@ -23,6 +23,7 @@ public:
     float getLongitude() ;
     Airport(string code, string name, string city, string country, float latitude, float longitude);
     bool operator==(const Airport &rhs) ;
+    bool operator<(const Airport &rhs) const ;
     Airport(string code);
 };
 

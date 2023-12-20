@@ -10,7 +10,7 @@ Graph<Airport> Data::getAP(){
 unordered_map<string, Airline> Data::getAirlines() {
     return airlines;
 }
-unordered_map<string, Airport> Data::getAirports() {
+unordered_map<string, Vertex<Airport>* > Data::getAirports() {
     return airports;
 }
 
@@ -31,9 +31,10 @@ void Data::parse_airports() {
         getline(iss, longitude);
         float lat = stof(latitude);
         float lon = stof(longitude);
-        Airport aero =Airport(code,name,city,country,lat,lon);
-        ap.addVertex(aero);
-        airports[code]=aero;
+        Airport aero = Airport(code,name,city,country,lat,lon);
+        Vertex<Airport>* aero_vertex=  new Vertex<Airport>(aero);
+        ap.addVertex(  aero_vertex);
+        airports[code]=aero_vertex;
     }
 
 }

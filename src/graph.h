@@ -7,6 +7,7 @@
 #include <stack>
 #include <list>
 #include "Airline.h"
+#include "Airport.h"
 
 
 using namespace std;
@@ -86,6 +87,7 @@ public:
     Vertex<T> *findVertex(const T &in) const;
     int getNumVertex() const;
     bool addVertex(const T &in);
+    void addVertex( Vertex<T>* in);
     bool removeVertex(const T &in);
     bool addEdge(const T &sourc, const T &dest, string AC, double w);
     bool removeEdge(const T &sourc, const T &dest);
@@ -100,7 +102,7 @@ public:
 /****************** Provided constructors and functions ********************/
 
 template <class T>
-Vertex<T>::Vertex(T in): info(in) {}
+Vertex<T>::Vertex(T in): info(in) { }
 
 template <class T>
 Edge<T>::Edge(Vertex<T> *d,string AC,double w): dest(d), distance(w), airline_code(AC) {}
@@ -241,7 +243,10 @@ bool Graph<T>::addVertex(const T &in) {
     return true;
 }
 
-
+template <class T>
+void Graph<T>::addVertex( Vertex<T>* in) {
+    vertexSet.push_back(in);
+}
 /*
  * Adds an edge to a graph (this), given the contents of the source and
  * destination vertices and the edge weight (w).
