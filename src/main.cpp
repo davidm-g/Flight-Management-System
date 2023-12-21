@@ -163,25 +163,25 @@ int main() {
                 cout << "Please select your desired method: ";
                 int so;
                 cin >> so;
-
+                cin.ignore();
                 switch (so) {
                     case 1:{
                         cout << "Please insert a source airport code/name: ";
                         string source;
-                        cin >> source;
+                        getline(cin,source);
                         cout << "Please insert a target airport code/name: ";
                         string target;
-                        cin >> target;
+                        getline(cin,target);
                         cout << '\n';
-                        cout << "The best flight option between those two airports is:";
-                        for(auto v : m.shortest_distance_airports(source,target)){
+                        cout << "The best flight options between those two airports are:\n";
+                        for(auto v : m.shortest_paths(source,target)){
                             for(int i = 0; i < v.size() - 1; i++){
                                 cout << v[i].getName() << " --> ";
                             }
                             cout << v[(v.size() - 1)].getName();
                             cout << "\n";
                         }
-                        //airport ---> airport
+
                         break;
                     }
 

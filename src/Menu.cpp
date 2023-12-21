@@ -249,146 +249,65 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, in
     }
     v->setProcessing(false);
 }
-vector<vector<Airport>> Menu::shortest_distance_airports(string source, string target) {
-    vector<vector<Airport>> res;
-    queue<Vertex<Airport>*> q;
-    map<Vertex<Airport>*, Vertex<Airport>*> parent; // To track parent vertices for path reconstruction
-    int min_d = INT_MAX;
-    for (auto v: d.getAP().getVertexSet()) v->setVisited(false);
-    if (d.getAirports().find(source) != d.getAirports().end()) {
-        q.push(d.getAirports()[source]);
-        d.getAirports()[source]->setVisited(true);
 
-
-        while (!q.empty()) {
-            auto current = q.front();
-            q.pop();
-            if (current->getInfo().getCode() == target || current->getInfo().getName() == target) {
-                vector<Airport> path;
-                auto curr = current;
-                while (curr != nullptr) { // while not at source airport
-                    path.push_back(curr->getInfo());
-                    curr = parent[curr];
-                }
-                reverse(path.begin(), path.end());
-                res.push_back(path);
+vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
+    std::queue<std::vector<Airport>> queue;
+    std::set<Airport> visited;
+    std::vector<std::vector<Airport>> paths; // todos os caminhos possiveis
+    std::vector<std::vector<Airport>> res;  //caminhos mais curtos
+    int m = INT_MAX;
+    if (d.getAirports().find(source) == d.getAirports().end()) {
+        for(auto v : d.getAP().getVertexSet()){
+            if(v->getInfo().getName() == source){
+                source = v->getInfo().getCode();
                 break;
             }
-
-            for (auto e : current->getAdj()) {
-                if (!e.getDest()->isVisited()) {
-                    e.getDest()->setVisited(true);
-                    q.push(e.getDest());
-                    parent[e.getDest()] = current;
-                }
+        }
+    }
+    if (d.getAirports().find(target) == d.getAirports().end()) {
+        for(auto v : d.getAP().getVertexSet()){
+            if(v->getInfo().getName() == target){
+                target = v->getInfo().getCode();
+                break;
             }
         }
     }
 
-    else{
+    queue.push({d.getAirports()[source]->getInfo()});
 
-        for(auto v: d.getAP().getVertexSet()){
-            if(v->getInfo().getName()==source){
-                v->setVisited(true);
-                q.push(v);
-                break;
-            }
+    while (!queue.empty()) {
+        std::vector<Airport> path = queue.front();
+        Airport current_node = path.back();
+        queue.pop();
+
+        if (current_node.getCode() == target) {
+            paths.push_back(path);
         }
 
-        while (!q.empty()) {
-            auto current = q.front();
-            q.pop();
-            if (current->getInfo().getCode() == target || current->getInfo().getName() == target) {
-                vector<Airport> path;
-                auto curr = current;
-                while (curr != nullptr) { // while not at source airport
-                    path.push_back(curr->getInfo());
-                    curr = parent[curr];
-                }
-                reverse(path.begin(), path.end());
-                res.push_back(path);
-                break;
-            }
-
-            for (auto e : current->getAdj()) {
-                if (!e.getDest()->isVisited()) {
-                    e.getDest()->setVisited(true);
-                    q.push(e.getDest());
-                    parent[e.getDest()] = current;
+        if (visited.find(current_node) == visited.end()) {
+            visited.insert(current_node);
+            for (auto e : d.getAirports()[current_node.getCode()]->getAdj()) {
+                if (visited.find(e.getDest()->getInfo()) == visited.end()) {
+                    std::vector<Airport> new_path = path;
+                    new_path.push_back(e.getDest()->getInfo());
+                    queue.push(new_path);
                 }
             }
         }
-
     }
+    for(auto v : paths){
+        if(v.size() <= m) m = v.size();
+    }
+    for(auto v : paths){
+        if(v.size() == m) res.push_back(v);
+    }
+
     return res;
-
 }
 
-/*
-std::vector<std::vector<T>> findBestFlightOption(Graph<T> &graph, const T &source, const T &destination) {
-    // Initialize a queue for BFS
-    std::queue<Vertex<T> *> q;
 
-    // Initialize a map to track the number of stops for each vertex
-    std::unordered_map<Vertex<T> *, int> stops;
 
-    // Initialize a map to track the previous vertex in the path
-    std::unordered_map<Vertex<T> *, Vertex<T> *> previous;
 
-    // Enqueue the source vertex with 0 stops
-    Vertex<T> *sourceVertex = graph.findVertex(source);
-    q.push(sourceVertex);
-    stops[sourceVertex] = 0;
-
-    // Initialize the minimum number of stops
-    int minStops = std::numeric_limits<int>::max();
-
-    // Initialize a vector to store all paths with the minimum number of stops
-    std::vector<std::vector<T>> allPaths;
-
-    // Perform BFS
-    while (!q.empty()) {
-        Vertex<T> *currentVertex = q.front();
-        q.pop();
-
-        // Check if the destination is reached
-        if (currentVertex->getInfo() == destination) {
-            // Reconstruct the path from source to destination
-            std::vector<T> path;
-            while (currentVertex != nullptr) {
-                path.insert(path.begin(), currentVertex->getInfo());
-                currentVertex = previous[currentVertex];
-            }
-
-            // Check if the path has the minimum number of stops
-            if (stops[currentVertex] == minStops) {
-                allPaths.push_back(path);
-            }
-        }
-
-        // Iterate through neighbors
-        for (Edge<T> edge : currentVertex->getAdj()) {
-            Vertex<T> *neighbor = edge.getDest();
-
-            // If the neighbor has not been visited
-            if (stops.find(neighbor) == stops.end()) {
-                // Enqueue the neighbor with one more stop
-                q.push(neighbor);
-                stops[neighbor] = stops[currentVertex] + 1;
-
-                // Set the path for backtracking
-                previous[neighbor] = currentVertex;
-
-                // Update the minimum number of stops
-                minStops = std::min(minStops, stops[neighbor]);
-            }
-        }
-    }
-
-    return allPaths;
-}
-
-*/
 static double haversine(double lat1, double lon1,
                         double lat2, double lon2)
 {
