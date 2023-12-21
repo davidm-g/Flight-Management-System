@@ -14,7 +14,6 @@ add_executable(GraphProject
         src/Menu.cpp
         src/Airline.cpp
         src/Airport.cpp
-        src/Airport.h
 )
 
 # Doxygen Build

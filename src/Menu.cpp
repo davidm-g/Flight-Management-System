@@ -127,41 +127,73 @@ int Menu::num_flights_airlines(std::string acode) {
     return n_voos;
 }
 
-void Menu::dfs_Stops(std::string acode, int max_stops) {
-    int n_countries=0;
-    int n_cities = 0;
+void Menu::bfs_Stops(std::string acode, int max_stops) {
+    int n_airports = 0;
+    queue<pair<int,Vertex<Airport>*>> q;
+    unordered_set<string> countries;
+    unordered_set<string> cities;
+    for(auto v : d.getAP().getVertexSet()) v->setVisited(false);
+    auto v =  d.getAP().findVertex(acode);
+    v->setVisited(true);
+    q.push(make_pair(0,v));
+    while(!q.empty()){
+        auto current = q.front().second;
+        int distance = q.front().first;
+        if(distance <= max_stops){
+            for(auto e : current->getAdj()){
+                if(!e.getDest()->isVisited()) {
+                    n_airports++;
+                    if (countries.find(e.getDest()->getInfo().getCountry()) == countries.end()) {
+                        countries.insert(e.getDest()->getInfo().getCountry());
+                    }
+                    if (cities.find(e.getDest()->getInfo().getCity())== cities.end()) {
+                        cities.insert(e.getDest()->getInfo().getCity());
+                    }
+                    e.getDest()->setVisited(true);
+                    q.push(make_pair(distance + 1, e.getDest()));
+                }
+            }
+        }
+        q.pop();
+
+    }
+    cout << "The number of reachable airports, cities and countries from " << v->getInfo().getName()
+    << " with " << max_stops <<" max lay-overs is, respectively: "
+    << n_airports << " " << cities.size() << " "<< countries.size() <<'\n';
+}
+void Menu::dfs_Des(string acode){
     int n_airports = 0;
     unordered_set<string> countries;
     unordered_set<string> cities;
     for(auto v : d.getAP().getVertexSet()) v->setVisited(false);
     auto v=  d.getAP().findVertex(acode);
-    dfs_Visit_Stops(v,max_stops,countries,cities,n_airports,n_cities,n_countries);
+    dfs_Visit_Des(v,countries,cities,n_airports);
     cout << "The number of new reachable airports, cities and countries from "<<v->getInfo().getName()
-    <<" with "<<max_stops<<" max lay-overs is,respectively: "
-    << n_airports<< " "<< n_cities<<" "<<n_countries<<'\n';
+         <<" is,respectively: "
+         << n_airports<< ", "<< cities.size()<<", "<<countries.size()<<'\n';
+
 }
-void Menu::dfs_Visit_Stops(Vertex<Airport> *v, int max_stops, unordered_set<std::string> &countries,
-                           unordered_set<std::string> &cities,  int &n_airports,
-                           int &n_cities, int &n_countries) {
+
+void Menu::dfs_Visit_Des(Vertex<Airport> * v , unordered_set<string>& countries,
+                          unordered_set<string>& cities, int& n_airports){
+
     v->setVisited(true);
-    if(max_stops >= 0){ //se a distância não é máxima
-        for(auto e : v->getAdj()){
-            if(!e.getDest()->isVisited()) {
-                n_airports++;
-                if (countries.find(e.getDest()->getInfo().getCountry()) == countries.end()) {
-                    n_countries++;
-                    countries.insert(e.getDest()->getInfo().getCountry());
-                }    //Encontrar novos countries
-                if (cities.find(e.getDest()->getInfo().getCity())== cities.end()) {
-                    n_cities++;
-                    cities.insert(e.getDest()->getInfo().getCity());
-                }
-                dfs_Visit_Stops(e.getDest(),max_stops - 1,countries,cities,n_airports,n_cities,n_countries);
+    for(auto e : v->getAdj()){
+        if(!e.getDest()->isVisited()) {
+            n_airports++;
+            if (countries.find(e.getDest()->getInfo().getCountry()) == countries.end()) {
+                countries.insert(e.getDest()->getInfo().getCountry());
             }
+            if (cities.find(e.getDest()->getInfo().getCity())== cities.end()) {
+
+                cities.insert(e.getDest()->getInfo().getCity());
+            }
+            dfs_Visit_Des(e.getDest(),countries,cities,n_airports);
         }
     }
 
 }
+
 vector<pair<int, pair<Airport,Airport> >> Menu::graph_diameter() {
     int m_distance = 0;
     vector<pair<int,pair<Airport,Airport>>> re;
@@ -251,12 +283,12 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, in
 }
 
 vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
-    std::queue<std::vector<Airport>> queue;
-    std::set<Airport> visited;
-    std::vector<std::vector<Airport>> paths; // todos os caminhos possiveis
-    std::vector<std::vector<Airport>> res;  //caminhos mais curtos
-    std::vector<Airport> path;
-    std::vector<Airport> new_path;
+    queue<std::vector<Airport>> queue;
+    set<Airport> visited;
+    vector<std::vector<Airport>> paths; // todos os caminhos possiveis
+    vector<std::vector<Airport>> res;  //caminhos mais curtos
+    vector<Airport> path;
+    vector<Airport> new_path;
     int m = INT_MAX;
     if (d.getAirports().find(source) == d.getAirports().end()) {
         for(auto v : d.getAP().getVertexSet()){
@@ -274,7 +306,6 @@ vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
             }
         }
     }
-
     queue.push({d.getAirports()[source]->getInfo()});
     Airport current_node;
     while (!queue.empty()) {
@@ -308,10 +339,61 @@ vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
     return res;
 }
 
-bool isVectorInVectorOfVectors(const std::vector<Airport>& target, const std::vector<std::vector<Airport>>& container) {
-    return std::find_if(container.begin(), container.end(), [&](const std::vector<Airport>& v) {
-        return std::equal(target.begin(), target.end(), v.begin(), v.end());
-    }) != container.end();
+vector<vector<Vertex<Airport>*>> Menu::shortest_paths2(string source, string target) {
+    queue<std::vector<Vertex<Airport>*>> queue;
+    set<Airport> visited;
+    vector<std::vector<Vertex<Airport>*>> paths; // todos os caminhos possiveis
+    vector<std::vector<Vertex<Airport>*>> res;  //caminhos mais curtos
+    vector<Vertex<Airport>*> path;
+    vector<Vertex<Airport>*> new_path;
+    int m = INT_MAX;
+    if (d.getAirports().find(source) == d.getAirports().end()) {
+        for(auto v : d.getAP().getVertexSet()){
+            if(v->getInfo().getName() == source){
+                source = v->getInfo().getCode();
+                break;
+            }
+        }
+    }
+    if (d.getAirports().find(target) == d.getAirports().end()) {
+        for(auto v : d.getAP().getVertexSet()){
+            if(v->getInfo().getName() == target){
+                target = v->getInfo().getCode();
+                break;
+            }
+        }
+    }
+    queue.push({d.getAirports()[source]});
+    Airport current_node;
+    while (!queue.empty()) {
+        path = queue.front();
+        current_node = path.back()->getInfo();
+        queue.pop();
+
+        if (current_node.getCode() == target) {
+            if(find(paths.begin(), paths.end(), path) == paths.end())
+                paths.push_back(path);
+        }
+
+        if (visited.find(current_node) == visited.end()) {
+            visited.insert(current_node);
+            for (auto e : d.getAirports()[current_node.getCode()]->getAdj()) {
+                if (visited.find(e.getDest()->getInfo()) == visited.end()) {
+                    new_path = path;
+                    new_path.push_back(e.getDest());
+                    queue.push(new_path);
+                }
+            }
+        }
+    }
+    for(auto v : paths){
+        if(v.size() <= m) m = v.size();
+    }
+    for(auto v : paths){
+        if(v.size() == m) res.push_back(v);
+    }
+
+    return res;
 }
 
 vector<string> Menu::city_airports(string city){
@@ -362,5 +444,88 @@ vector<string> Menu::findNearestAirports(double lat, double lon) {
     }
     return res;
 }
+
+
+vector<vector<Vertex<Airport>*>> Menu::f1_shortest_paths(string start, string target){
+    /*
+    auto paths = shortest_paths2(start, target);
+    vector<vector<Vertex<Airport>*>> res1;
+    vector<pair<int, vector<Vertex<Airport>*>>> finalPaths;
+    int minAirlineChanges = INT_MAX;
+
+    for (vector<Vertex<Airport>*> path : paths) {
+        int airlineChanges = countAirlineChanges(path);
+        if (airlineChanges <= minAirlineChanges) {
+            if (airlineChanges < minAirlineChanges) {
+                minAirlineChanges = airlineChanges;
+                finalPaths.clear();
+            }
+            finalPaths.push_back(make_pair(airlineChanges, path));
+        }
+    }
+
+    for (auto& path : finalPaths) {
+        if (path.first == minAirlineChanges) {
+            res1.push_back(path.second);
+        }
+    }
+
+    return res1;
+    */
+   auto res = shortest_paths2(start,target);
+    vector<vector<Vertex<Airport>*>> res1;
+   vector<pair<int, vector<Vertex<Airport>*>>> final;
+   int m = 0;
+   for(auto v : res){ //vector de vertices
+       unordered_map<string,int> acode;
+       for(int i = 0; i < v.size();i++){ //VERTICES
+           for(auto e : v[i]->getAdj()){
+               if(i + 1 < v.size() && e.getDest()==v[i+1]) {
+                   if(acode.find(e.getAirlinecode()) == acode.end()) acode[e.getAirlinecode()] = 1;
+                   else acode[e.getAirlinecode()]++;
+               }
+           }
+       }
+       int temp = 0;
+       for(auto a : acode){
+           if (a.second >= temp) temp = a.second;
+       }
+
+       if(temp >= m) m = temp;
+       final.push_back(make_pair(temp,v));
+   }
+   for(auto v : final){
+       if(v.first == m) res1.push_back(v.second);
+   }
+    return res1;
+
+}
+
+int Menu::countAirlineChanges(vector<Vertex<Airport>*> path) {
+    if (path.size() <= 1) {
+        return 0; // If the path has 0 or 1 vertex, there are no changes
+    }
+
+    int airlineChanges = 0;
+    for (size_t i = 0; i < path.size() - 1; ++i) {
+        auto edges = path[i]->getAdj();
+        bool found = false;
+        for (const auto& edge : edges) {
+            if (edge.getDest() == path[i + 1]) {
+                if (edge.getAirlinecode() != edges[0].getAirlinecode()) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            ++airlineChanges;
+        }
+    }
+    return airlineChanges;
+}
+
+
+
 
 

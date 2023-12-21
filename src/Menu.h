@@ -8,6 +8,7 @@
 #include <set>
 #include <algorithm>
 #include <map>
+#include <limits>
 
 class Menu {
 private:
@@ -24,8 +25,9 @@ public:
     int num_countries_airport(string acode);
     int num_cities_airport(string acode);
     int num_airports_airport(string acode);
-    void dfs_Stops(string acode, int max_stops);
-    void dfs_Visit_Stops(Vertex<Airport> * v , int max_stops, unordered_set<string>& countries,unordered_set<string>& cities, int& n_airports, int& n_cities, int& n_countries);
+    void bfs_Stops(string acode, int max_stops);
+    void dfs_Des(string acode);
+    void dfs_Visit_Des(Vertex<Airport> * v , unordered_set<string>& countries,unordered_set<string>& cities, int& n_airports);
     vector<pair<int,pair<Airport,Airport>>>graph_diameter();
     vector<pair<int,Airport>> greatest_air_traffic(int k);
     set<Airport> Articu_points();
@@ -33,7 +35,11 @@ public:
     vector<vector<Airport>> shortest_distance_airports(string source, string target);
     vector<string> findNearestAirports(double lat, double lon);
     vector<std::vector<Airport>> shortest_paths(string start,string end);
+    vector<std::vector<Airport>> shortest_paths_min_airlines(string start,string end);
     vector<string> city_airports(string city);
+    vector<vector<Vertex<Airport>*>> f1_shortest_paths(string start, string target);
+    vector<vector<Vertex<Airport>*>> shortest_paths2(string source, string target);
+    int countAirlineChanges(vector<Vertex<Airport>*> path);
 };
 
 

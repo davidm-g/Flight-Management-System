@@ -8,6 +8,9 @@ using namespace std;
 int main() {
     Menu m = Menu();
     int choice;
+    bool filter_min_airlines;
+    bool filter_airlines_list;
+    bool filter_avoid_countries;
     while (true) {
         cout << " _________________________________________ " << '\n';
         cout << "|      Flight Management System           |" << '\n';
@@ -24,7 +27,7 @@ int main() {
         cout << "|9.  Top-k airports by air traffic        |" << '\n';
         cout << "|10. Articulation points                  |" << '\n';
         cout << "|11. Best flight option                   |" << '\n';
-        cout << "|12. Best flight option with filters      |" << '\n';
+        cout << "|12. Flight filters configurations        |" << '\n';
         cout << "|13. Exit                                 |" << '\n';
         cout << "|_________________________________________|" << "\n";
         cout << "Please enter your choice:";
@@ -114,19 +117,17 @@ int main() {
                 string acode;
                 cout << "Please enter the desire airport code:\n";
                 cin >> acode;
-                cout << "Airport " << acode << " flies to: " << m.num_countries_airport(acode)
-                << " countries, " << m.num_cities_airport(acode) << " cities and "
-                    << m.num_airports_airport(acode) << " airports.\n";
+                m.dfs_Des(acode);
                 break;
             }
             case 7: {
                 string acode;
-                cout << "Please enter the desire airport code:";
+                cout << "Please enter the desired airport code:";
                 cin >> acode;
                 int max_stops;
                 cout << "Please enter the maximum number of lay-overs:";
                 cin >> max_stops;
-                m.dfs_Stops(acode,max_stops);
+                m.bfs_Stops(acode,max_stops);
                 break;
             }
             case 8:{
@@ -158,39 +159,63 @@ int main() {
                 break;
             }
             case 11: {
-                cout << "1. Best flight airport --> airport" << '\n';
-                cout << "2. Best flight airport --> city" << '\n';
-                cout << "3. Best flight airport --> coordinates" << '\n';
+                cout << " ___________________________________________ " << '\n';
+                cout << "|           Best Flight Options             |" << '\n';
+                cout << "|1. Best flight airport --> airport         |" << '\n';
+                cout << "|2. Best flight airport --> city            |" << '\n';
+                cout << "|3. Best flight airport --> coordinates     |" << '\n';
+                cout << "|4. Best flight city --> airport            |" << '\n';
+                cout << "|5. Best flight city --> city               |" << '\n';
+                cout << "|6. Best flight city --> coordinates        |" << '\n';
+                cout << "|7. Best flight coordinates --> airport     |" << '\n';
+                cout << "|8. Best flight coordinates --> city        |" << '\n';
+                cout << "|9. Best flight coordinates --> coordinates |" << '\n';
+                cout << "|___________________________________________|" << '\n';
                 cout << "Please select your desired method: ";
                 int so;
                 cin >> so;
                 cin.ignore();
                 switch (so) {
                     case 1:{
-                        cout << "Please insert a source airport code/name: ";
+
+                        cout << "Insert a source airport code/name: ";
                         string source;
                         getline(cin,source);
-                        cout << "Please insert a target airport code/name: ";
+                        cout << "Insert a target airport code/name: ";
                         string target;
                         getline(cin,target);
                         cout << '\n';
                         cout << "The best flight options between those two airports are:" << '\n';
-                        for(auto v : m.shortest_paths(source,target)){
-                            for(int i = 0; i < v.size() - 1; i++){
-                                cout << v[i].getName() << " --> ";
+                        vector<vector<Vertex<Airport>*>> temp;
+                        if(filter_min_airlines) {
+                            temp = m.f1_shortest_paths(source, target);
+
+                            for (auto v: temp) {
+                                for (int i = 0; i < v.size() - 1; i++) {
+                                    cout << v[i]->getInfo().getName() << " --> ";
+                                }
+                                cout << v[(v.size() - 1)]->getInfo().getName();
+                                cout << "\n";
                             }
-                            cout << v[(v.size() - 1)].getName();
-                            cout << "\n";
+                        }
+                        else {
+                            for (auto v: m.shortest_paths2(source, target)) {
+                                for (int i = 0; i < v.size() - 1; i++) {
+                                    cout << v[i]->getInfo().getName() << " --> ";
+                                }
+                                cout << v[(v.size() - 1)]->getInfo().getName();
+                                cout << "\n";
+                            }
                         }
 
                         break;
                     }
 
                     case 2:{
-                        cout << "Please insert a source airport code/name: ";
+                        cout << "Insert a source airport code/name: ";
                         string source;
                         getline(cin,source);
-                        cout << "Please insert a target city: ";
+                        cout << "Insert a target city: ";
                         string target;
                         getline(cin,target);
                         cout << '\n';
@@ -201,6 +226,7 @@ int main() {
                                 res.push_back(v);
                             }
                         }
+
                         int min=INT_MAX;
                         for(auto path: res) {
                             if (path.size() <= min) {
@@ -222,13 +248,16 @@ int main() {
 
                     case 3: {
                         string source;
-                        cout << "Please insert a source airport code/name: ";
+                        cout << "Insert a source airport code/name: ";
                         cin >> source;
                         double lat, lon;
-                        cout << "Please insert the latitude of the target airport: ";
+                        cout << "Insert the latitude of the target airport: ";
                         cin >> lat;
-                        cout << "Please insert the longitude of the target airport: ";
+                        cout << '\n';
+                        cout << "Insert the longitude of the target airport: ";
                         cin >> lon;
+                        cout << '\n';
+                        cout << "The best flight options between those two cities are: " << '\n';
                         vector<vector<Airport>> res;
                         for(string airport_code : m.findNearestAirports(lat, lon)) {
                             for (vector<Airport> v: m.shortest_paths(source, airport_code)) {
@@ -254,36 +283,269 @@ int main() {
                         break;
                     }
                     case 4:{
+                        cout << "Insert a source city: ";
+                        string source;
+                        getline(cin,source);
+                        cout << "Insert a target airport code/name: ";
+                        string target;
+                        getline(cin,target);
+                        cout << '\n';
+                        cout << "The best flight options between that city and that airport are: " << '\n';
+                        vector<vector<Airport>> res;
+                        for(string airport_code : m.city_airports(source)) {
+                            for (vector<Airport> v: m.shortest_paths(airport_code, target)) {
+                                res.push_back(v);
+                            }
+                        }
+                        int min=INT_MAX;
+                        for(auto path: res) {
+                            if (path.size() <= min) {
+                                min = path.size();
+                            }
+                        }
+                        for(auto path : res){
+                            if(path.size()==min){
+                                for(int i = 0; i < path.size() - 1; i++){
+                                    cout << path[i].getName() << " --> ";
+                                }
+                                cout << path[(path.size() - 1)].getName();
+                                cout << "\n";
+                            }
+                        }
                         //city ---> airport
                         break;
                     }
-                    case 5:{
+                    case 5: {
+                        cout << "Insert a source city: ";
+                        string source;
+                        getline(cin, source);
+                        cout << "Insert a target city: ";
+                        string target;
+                        getline(cin, target);
+                        cout << '\n';
+                        cout << "The best flight options between those two cities are: " << '\n';
+                        vector<vector<Airport>> res;
+                        for (string airport_code: m.city_airports(source)) {
+                            for (string t: m.city_airports(target)) {
+                                for (vector<Airport> v: m.shortest_paths(airport_code, t)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        int min = INT_MAX;
+                        for (auto path: res) {
+                            if (path.size() <= min) {
+                                min = path.size();
+                            }
+                        }
+                        for (auto path: res) {
+                            if (path.size() == min) {
+                                for (int i = 0; i < path.size() - 1; i++) {
+                                    cout << path[i].getName() << " --> ";
+                                }
+                                cout << path[(path.size() - 1)].getName();
+                                cout << "\n";
+                            }
+                        }
                         //city ---> city
                         break;
                     }
-                    case 6:{
+                    case 6: {
+                        string source;
+                        cout << "Insert a source city: ";
+                        cin >> source;
+                        double lat, lon;
+                        cout << "Insert the latitude of the target airport: ";
+                        cin >> lat;
+                        cout << "Insert the longitude of the target airport: ";
+                        cin >> lon;
+                        cout << '\n';
+                        cout << "The best flight options between those two cities are: " << '\n';
+                        vector<vector<Airport>> res;
+                        for(string ap_code_s : m.city_airports(source)) {
+                            for (string ap_code_t: m.findNearestAirports(lat, lon)) {
+                                for (vector<Airport> v: m.shortest_paths(ap_code_s, ap_code_t)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        int min=INT_MAX;
+                        for(auto path: res) {
+                            if (path.size() <= min) {
+                                min = path.size();
+                            }
+                        }
+                        for(auto path : res){
+                            if(path.size()==min){
+                                for(int i = 0; i < path.size() - 1; i++){
+                                    cout << path[i].getName() << " --> ";
+                                }
+                                cout << path[(path.size() - 1)].getName();
+                                cout << "\n";
+                            }
+                        }
                         //city ---> coordinates
                         break;
                     }
                     case 7:{
+                        double lat, lon;
+                        cout << "Insert the latitude of the source airport: ";
+                        cin >> lat;
+                        cout << "Insert the longitude of the source airport: ";
+                        cin >> lon;
+                        string target;
+                        cout << "Insert a target airport code/name: ";
+                        cin >> target;
+                        cout << '\n';
+                        cout << "The best flight options between those two cities are: " << '\n';
+                        vector<vector<Airport>> res;
+                        for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                            for (vector<Airport> v: m.shortest_paths(ap_code_s, target)) {
+                                res.push_back(v);
+                            }
+
+                        }
+                        int min=INT_MAX;
+                        for(auto path: res) {
+                            if (path.size() <= min) {
+                                min = path.size();
+                            }
+                        }
+                        for(auto path : res){
+                            if(path.size()==min){
+                                for(int i = 0; i < path.size() - 1; i++){
+                                    cout << path[i].getName() << " --> ";
+                                }
+                                cout << path[(path.size() - 1)].getName();
+                                cout << "\n";
+                            }
+                        }
                         //coordinates ---> airport
                         break;
                     }
                     case 8:{
+                        double lat, lon;
+                        cout << "Insert the latitude of the source airport: ";
+                        cin >> lat;
+                        cout << "Insert the longitude of the source airport: ";
+                        cin >> lon;
+                        string target;
+                        cout << "Insert a target city: ";
+                        cin >> target;
+                        cout << '\n';
+                        cout << "The best flight options between those two cities are: " << '\n';
+                        vector<vector<Airport>> res;
+                        for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                            for (string ap_code_t: m.city_airports(target)) {
+                                for (vector<Airport> v: m.shortest_paths(ap_code_s, ap_code_t)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        int min=INT_MAX;
+                        for(auto path: res) {
+                            if (path.size() <= min) {
+                                min = path.size();
+                            }
+                        }
+                        for(auto path : res){
+                            if(path.size()==min){
+                                for(int i = 0; i < path.size() - 1; i++){
+                                    cout << path[i].getName() << " --> ";
+                                }
+                                cout << path[(path.size() - 1)].getName();
+                                cout << "\n";
+                            }
+                        }
                         //coordinates ---> city
                         break;
                     }
                     case 9:{
+                        double lat1, lon1;
+                        cout << "Insert the latitude of the source airport: ";
+                        cin >> lat1;
+                        cout << "Insert the longitude of the source airport: ";
+                        cin >> lon1;
+                        double lat2, lon2;
+                        cout << "Insert the latitude of the target airport: ";
+                        cin >> lat2;
+                        cout << "Insert the longitude of the target airport: ";
+                        cin >> lon2;
+                        cout << '\n';
+                        cout << "The best flight options between those two cities are: " << '\n';
+                        vector<vector<Airport>> res;
+                        for(string ap_code_s : m.findNearestAirports(lat1, lon1)) {
+                            for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
+                                for (vector<Airport> v: m.shortest_paths(ap_code_s, ap_code_t)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        int min=INT_MAX;
+                        for(auto path: res) {
+                            if (path.size() <= min) {
+                                min = path.size();
+                            }
+                        }
+                        for(auto path : res){
+                            if(path.size()==min){
+                                for(int i = 0; i < path.size() - 1; i++){
+                                    cout << path[i].getName() << " --> ";
+                                }
+                                cout << path[(path.size() - 1)].getName();
+                                cout << "\n";
+                            }
+                        }
                         //coordinates ---> coordinates
                         break;
                     }
 
                     default:{
+                        cout << "Invalid choice. Please enter a valid option." << '\n';
                         break;
                     }
 
                 }
 
+                break;
+            }
+            case 12: {
+                cout << " ___________________________________________ " << '\n';
+                cout << "|                Filter List                |" << '\n';
+                cout << "|1. Minimum airlines flight                 |" << '\n';
+                cout << "|2. Preferred airlines flight               |" << '\n';
+                cout << "|3. Flight avoiding countries               |" << '\n';
+                cout << "|4. Turn off filters                        |" << '\n';
+                cout << "|___________________________________________|" << '\n';
+                cout << "Please select the filter to enable: ";
+                int c;
+                cin >> c;
+                switch (c) {
+                    case 1:{
+                        filter_min_airlines = true;
+                        filter_airlines_list = false;
+                        filter_avoid_countries = false;
+                        break;
+                    }
+                    case 2:{
+                        filter_min_airlines = false;
+                        filter_airlines_list = true;
+                        filter_avoid_countries = false;
+                        break;
+                    }
+                    case 3:{
+                        filter_min_airlines = false;
+                        filter_airlines_list = false;
+                        filter_avoid_countries = true;
+                        break;
+                    }
+                    case 4:{
+                        filter_min_airlines = false;
+                        filter_airlines_list = false;
+                        filter_avoid_countries = false;
+                        break;
+                    }
+                }
                 break;
             }
             case 13: {
