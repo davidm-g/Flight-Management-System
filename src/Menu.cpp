@@ -255,6 +255,8 @@ vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
     std::set<Airport> visited;
     std::vector<std::vector<Airport>> paths; // todos os caminhos possiveis
     std::vector<std::vector<Airport>> res;  //caminhos mais curtos
+    std::vector<Airport> path;
+    std::vector<Airport> new_path;
     int m = INT_MAX;
     if (d.getAirports().find(source) == d.getAirports().end()) {
         for(auto v : d.getAP().getVertexSet()){
@@ -274,21 +276,22 @@ vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
     }
 
     queue.push({d.getAirports()[source]->getInfo()});
-
+    Airport current_node;
     while (!queue.empty()) {
-        std::vector<Airport> path = queue.front();
-        Airport current_node = path.back();
+        path = queue.front();
+        current_node = path.back();
         queue.pop();
 
         if (current_node.getCode() == target) {
-            paths.push_back(path);
+            if(find(paths.begin(), paths.end(), path) == paths.end())
+                paths.push_back(path);
         }
 
         if (visited.find(current_node) == visited.end()) {
             visited.insert(current_node);
             for (auto e : d.getAirports()[current_node.getCode()]->getAdj()) {
                 if (visited.find(e.getDest()->getInfo()) == visited.end()) {
-                    std::vector<Airport> new_path = path;
+                    new_path = path;
                     new_path.push_back(e.getDest()->getInfo());
                     queue.push(new_path);
                 }
@@ -305,8 +308,20 @@ vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
     return res;
 }
 
+bool isVectorInVectorOfVectors(const std::vector<Airport>& target, const std::vector<std::vector<Airport>>& container) {
+    return std::find_if(container.begin(), container.end(), [&](const std::vector<Airport>& v) {
+        return std::equal(target.begin(), target.end(), v.begin(), v.end());
+    }) != container.end();
+}
 
-
+vector<string> Menu::city_airports(string city){
+    vector<string> res;
+    for(auto vertex: d.getAP().getVertexSet()){
+        if(vertex->getInfo().getCity()==city)
+            res.push_back(vertex->getInfo().getCode());
+    }
+    return res;
+}
 
 static double haversine(double lat1, double lon1,
                         double lat2, double lon2)
@@ -331,14 +346,14 @@ static double haversine(double lat1, double lon1,
     return rad * c;
 }
 
-vector<Airport> Menu::findNearestAirports(double lat, double lon) {
-    vector<pair<double, Airport>> tmp;
-    vector<Airport> res;
+vector<string> Menu::findNearestAirports(double lat, double lon) {
+    vector<pair<double, string>> tmp;
+    vector<string> res;
     double minDist = DBL_MAX;
     for (auto ap : d.getAP().getVertexSet()) {
         if(haversine(lat, lon, ap->getInfo().getLatitude(), ap->getInfo().getLongitude()) <= minDist) {
             minDist = haversine(lat, lon, ap->getInfo().getLatitude(), ap->getInfo().getLongitude());
-            tmp.push_back(make_pair(minDist, ap->getInfo()));
+            tmp.push_back(make_pair(minDist, ap->getInfo().getCode()));
         }
     }
     for (auto p : tmp) {

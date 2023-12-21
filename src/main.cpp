@@ -158,8 +158,9 @@ int main() {
                 break;
             }
             case 11: {
-                cout << "1. Flight between two airports" << '\n';
-                cout << "2. (Temporary) Find nearest airports" << '\n';
+                cout << "1. Best flight airport --> airport" << '\n';
+                cout << "2. Best flight airport --> city" << '\n';
+                cout << "3. Best flight airport --> coordinates" << '\n';
                 cout << "Please select your desired method: ";
                 int so;
                 cin >> so;
@@ -173,7 +174,7 @@ int main() {
                         string target;
                         getline(cin,target);
                         cout << '\n';
-                        cout << "The best flight options between those two airports are:\n";
+                        cout << "The best flight options between those two airports are:" << '\n';
                         for(auto v : m.shortest_paths(source,target)){
                             for(int i = 0; i < v.size() - 1; i++){
                                 cout << v[i].getName() << " --> ";
@@ -186,24 +187,69 @@ int main() {
                     }
 
                     case 2:{
-                        double lat, lon;
-                        cout << "Latitude:";
-                        cin >> lat;
-                        cout << '\n' << "Longitude:";
-                        cin >> lon; \
+                        cout << "Please insert a source airport code/name: ";
+                        string source;
+                        getline(cin,source);
+                        cout << "Please insert a target city: ";
+                        string target;
+                        getline(cin,target);
                         cout << '\n';
-                        for(auto ap : m.findNearestAirports(lat, lon))
-                            cout << ap.getName() << '\n';
+                        cout << "The best flight options between that airport and that city are: " << '\n';
+                        vector<vector<Airport>> res;
+                        for(string airport_code : m.city_airports(target)) {
+                            for (vector<Airport> v: m.shortest_paths(source, airport_code)) {
+                                res.push_back(v);
+                            }
+                        }
+                        int min=INT_MAX;
+                        for(auto path: res) {
+                            if (path.size() <= min) {
+                                min = path.size();
+                            }
+                        }
+                        for(auto path : res){
+                            if(path.size()==min){
+                                for(int i = 0; i < path.size() - 1; i++){
+                                    cout << path[i].getName() << " --> ";
+                                }
+                                cout << path[(path.size() - 1)].getName();
+                                cout << "\n";
+                            }
+                        }
                         //airport ---> city
                         break;
                     }
 
-                    case 3:{
-                        string apcode;
-                        cin >> apcode;
+                    case 3: {
+                        string source;
+                        cout << "Please insert a source airport code/name: ";
+                        cin >> source;
                         double lat, lon;
+                        cout << "Please insert the latitude of the target airport: ";
                         cin >> lat;
+                        cout << "Please insert the longitude of the target airport: ";
                         cin >> lon;
+                        vector<vector<Airport>> res;
+                        for(string airport_code : m.findNearestAirports(lat, lon)) {
+                            for (vector<Airport> v: m.shortest_paths(source, airport_code)) {
+                                res.push_back(v);
+                            }
+                        }
+                        int min=INT_MAX;
+                        for(auto path: res) {
+                            if (path.size() <= min) {
+                                min = path.size();
+                            }
+                        }
+                        for(auto path : res){
+                            if(path.size()==min){
+                                for(int i = 0; i < path.size() - 1; i++){
+                                    cout << path[i].getName() << " --> ";
+                                }
+                                cout << path[(path.size() - 1)].getName();
+                                cout << "\n";
+                            }
+                        }
                         //airport ---> coordinates
                         break;
                     }

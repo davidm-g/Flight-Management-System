@@ -31,8 +31,9 @@ public:
     set<Airport> Articu_points();
     void dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, int& i);
     vector<vector<Airport>> shortest_distance_airports(string source, string target);
-    vector<Airport> findNearestAirports(double lat, double lon);
+    vector<string> findNearestAirports(double lat, double lon);
     vector<std::vector<Airport>> shortest_paths(string start,string end);
+    vector<string> city_airports(string city);
 };
 
 

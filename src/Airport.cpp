@@ -34,7 +34,7 @@ float Airport::getLongitude()  {
     return longitude;
 }
 
-bool Airport::operator==(const Airport &rhs) {
+bool Airport::operator==(const Airport &rhs) const{
     return code == rhs.code;
 }
 
