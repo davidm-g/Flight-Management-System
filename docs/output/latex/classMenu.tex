@@ -1,0 +1,329 @@
+\doxysection{Menu Class Reference}
+\hypertarget{classMenu}{}\label{classMenu}\index{Menu@{Menu}}
+
+
+Represents the user-\/friendly interface for the flight management system. It shows available functionalities and their corresponding outputs in a clear, organized, and logical manner, facilitating seamless program utilization and straightforward result interpretation.  
+
+
+
+
+{\ttfamily \#include $<$Menu.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classMenu_ad466dd83355124a6ed958430450bfe94}{Menu}} ()
+\item 
+int \mbox{\hyperlink{classMenu_a613a5d1e1088915e7b585d175e32ad24}{total\+Airports}} ()
+\item 
+int \mbox{\hyperlink{classMenu_a6937e54eb97e626055b336e4aeaeca3e}{total\+Flights}} ()
+\item 
+pair$<$ int, int $>$ \mbox{\hyperlink{classMenu_a6e8220f16ad706801346fbaa22ec266c}{num\+Flights\+Airlines}} (string apcode)
+\item 
+int \mbox{\hyperlink{classMenu_ab9d45569f5abc032e111a0083a4579d0}{num\+\_\+flights\+\_\+airlines}} (string acode)
+\item 
+int \mbox{\hyperlink{classMenu_a860e6011af372b2171f7e2cb7b0f0480}{num\+\_\+flights\+\_\+city}} (string name)
+\item 
+int \mbox{\hyperlink{classMenu_a0b9007bbcff13e3a9425a70f6f61cd8a}{num\+\_\+countries\+\_\+city}} (string city)
+\item 
+int \mbox{\hyperlink{classMenu_af12501d2fbe0d6005ba6c45eef1558e3}{num\+\_\+countries\+\_\+airport}} (string acode)
+\item 
+void \mbox{\hyperlink{classMenu_a4502446683102bb2c726e0dca50039d9}{bfs\+\_\+\+Stops}} (string acode, int max\+\_\+stops)
+\item 
+void \mbox{\hyperlink{classMenu_aca27cb07daef3208a8255e2c1157abb6}{dfs\+\_\+\+Des}} (string acode)
+\item 
+void \mbox{\hyperlink{classMenu_aceef239ba11fcd0d06279c7fdec8ce5f}{dfs\+\_\+\+Visit\+\_\+\+Des}} (\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*}v, unordered\+\_\+set$<$ string $>$ \&countries, unordered\+\_\+set$<$ string $>$ \&cities, int \&n\+\_\+airports)
+\item 
+vector$<$ pair$<$ int, pair$<$ \mbox{\hyperlink{classAirport}{Airport}}, \mbox{\hyperlink{classAirport}{Airport}} $>$ $>$ $>$ \mbox{\hyperlink{classMenu_a63b670d080bdb4d9bff9502d68354ab9}{graph\+\_\+diameter}} ()
+\item 
+vector$<$ pair$<$ int, \mbox{\hyperlink{classAirport}{Airport}} $>$ $>$ \mbox{\hyperlink{classMenu_a728a72908eaea898443a490760daae57}{greatest\+\_\+air\+\_\+traffic}} (int k)
+\item 
+set$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \mbox{\hyperlink{classMenu_ab1514dc6c6554d2f2b74708d2413951b}{Articu\+\_\+points}} ()
+\item 
+void \mbox{\hyperlink{classMenu_a722fd1b50e6113a0197af4c736039a3c}{dfs\+\_\+arti}} (\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*}v, stack$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \&s, set$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \&res, int \&i)
+\item 
+\Hypertarget{classMenu_ae9ba4b77559c0e98e95105598b2974b3}\label{classMenu_ae9ba4b77559c0e98e95105598b2974b3} 
+vector$<$ vector$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ $>$ {\bfseries shortest\+\_\+distance\+\_\+airports} (string source, string target)
+\item 
+vector$<$ string $>$ \mbox{\hyperlink{classMenu_a0e56c7a9a1f7aa3a42ff85fa229ef56b}{find\+Nearest\+Airports}} (double lat, double lon)
+\item 
+vector$<$ std\+::vector$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ $>$ \mbox{\hyperlink{classMenu_a40df3c2bce4f36fe053f4a97e5f18b3e}{shortest\+\_\+paths}} (string start, string end)
+\item 
+\Hypertarget{classMenu_a64ba6a81a1d4fa6b4433f4bda550cf5c}\label{classMenu_a64ba6a81a1d4fa6b4433f4bda550cf5c} 
+vector$<$ std\+::vector$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ $>$ {\bfseries shortest\+\_\+paths\+\_\+min\+\_\+airlines} (string start, string end)
+\item 
+vector$<$ string $>$ \mbox{\hyperlink{classMenu_a81ba691a7ef4b8b45a8a08857653f865}{city\+\_\+airports}} (string city)
+\item 
+vector$<$ vector$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*} $>$ $>$ \mbox{\hyperlink{classMenu_a90e2633c243d79c74bebae1583140cf6}{f1\+\_\+shortest\+\_\+paths}} (string start, string target)
+\item 
+vector$<$ vector$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*} $>$ $>$ \mbox{\hyperlink{classMenu_a63be7c94035f0d3528cd1d7cf0a0e1d4}{shortest\+\_\+paths2}} (string source, string target)
+\item 
+\Hypertarget{classMenu_a7cc077aef6b0dd79f480907e4dda102a}\label{classMenu_a7cc077aef6b0dd79f480907e4dda102a} 
+int {\bfseries count\+Airline\+Changes} (vector$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*} $>$ path)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the user-\/friendly interface for the flight management system. It shows available functionalities and their corresponding outputs in a clear, organized, and logical manner, facilitating seamless program utilization and straightforward result interpretation. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classMenu_ad466dd83355124a6ed958430450bfe94}\label{classMenu_ad466dd83355124a6ed958430450bfe94} 
+\index{Menu@{Menu}!Menu@{Menu}}
+\index{Menu@{Menu}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{Menu()}{Menu()}}
+{\footnotesize\ttfamily Menu\+::\+Menu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\doxylink{classMenu}{Menu} constructor -\/ parse the csv files 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classMenu_ab1514dc6c6554d2f2b74708d2413951b}\label{classMenu_ab1514dc6c6554d2f2b74708d2413951b} 
+\index{Menu@{Menu}!Articu\_points@{Articu\_points}}
+\index{Articu\_points@{Articu\_points}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{Articu\_points()}{Articu\_points()}}
+{\footnotesize\ttfamily set$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ Menu\+::\+Articu\+\_\+points (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Delivers the airports that are essential to networks circulation capability \begin{DoxyReturn}{Returns}
+a set of articulation points 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a4502446683102bb2c726e0dca50039d9}\label{classMenu_a4502446683102bb2c726e0dca50039d9} 
+\index{Menu@{Menu}!bfs\_Stops@{bfs\_Stops}}
+\index{bfs\_Stops@{bfs\_Stops}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{bfs\_Stops()}{bfs\_Stops()}}
+{\footnotesize\ttfamily void Menu\+::bfs\+\_\+\+Stops (\begin{DoxyParamCaption}\item[{string}]{acode,  }\item[{int}]{max\+\_\+stops }\end{DoxyParamCaption})}
+
+Reachable destinations with x stops 
+\begin{DoxyParams}{Parameters}
+{\em acode} & \\
+\hline
+{\em max\+\_\+stops} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classMenu_a81ba691a7ef4b8b45a8a08857653f865}\label{classMenu_a81ba691a7ef4b8b45a8a08857653f865} 
+\index{Menu@{Menu}!city\_airports@{city\_airports}}
+\index{city\_airports@{city\_airports}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{city\_airports()}{city\_airports()}}
+{\footnotesize\ttfamily vector$<$ string $>$ Menu\+::city\+\_\+airports (\begin{DoxyParamCaption}\item[{string}]{city }\end{DoxyParamCaption})}
+
+function to know the airports in a determined city 
+\begin{DoxyParams}{Parameters}
+{\em city} & the name of the city \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector of airport codes that are established on a given city 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a722fd1b50e6113a0197af4c736039a3c}\label{classMenu_a722fd1b50e6113a0197af4c736039a3c} 
+\index{Menu@{Menu}!dfs\_arti@{dfs\_arti}}
+\index{dfs\_arti@{dfs\_arti}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{dfs\_arti()}{dfs\_arti()}}
+{\footnotesize\ttfamily void Menu\+::dfs\+\_\+arti (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*}}]{v,  }\item[{stack$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \&}]{s,  }\item[{set$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \&}]{res,  }\item[{int \&}]{i }\end{DoxyParamCaption})}
+
+auxiliary function for Articu\+\_\+points \Hypertarget{classMenu_aca27cb07daef3208a8255e2c1157abb6}\label{classMenu_aca27cb07daef3208a8255e2c1157abb6} 
+\index{Menu@{Menu}!dfs\_Des@{dfs\_Des}}
+\index{dfs\_Des@{dfs\_Des}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{dfs\_Des()}{dfs\_Des()}}
+{\footnotesize\ttfamily void Menu\+::dfs\+\_\+\+Des (\begin{DoxyParamCaption}\item[{string}]{acode }\end{DoxyParamCaption})}
+
+Nr of destinations from airport 
+\begin{DoxyParams}{Parameters}
+{\em acode} & of the starting airport \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classMenu_aceef239ba11fcd0d06279c7fdec8ce5f}\label{classMenu_aceef239ba11fcd0d06279c7fdec8ce5f} 
+\index{Menu@{Menu}!dfs\_Visit\_Des@{dfs\_Visit\_Des}}
+\index{dfs\_Visit\_Des@{dfs\_Visit\_Des}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{dfs\_Visit\_Des()}{dfs\_Visit\_Des()}}
+{\footnotesize\ttfamily void Menu\+::dfs\+\_\+\+Visit\+\_\+\+Des (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*}}]{v,  }\item[{unordered\+\_\+set$<$ string $>$ \&}]{countries,  }\item[{unordered\+\_\+set$<$ string $>$ \&}]{cities,  }\item[{int \&}]{n\+\_\+airports }\end{DoxyParamCaption})}
+
+auxiliary function for dfs\+\_\+des 
+\begin{DoxyParams}{Parameters}
+{\em v} & vertex being visited \\
+\hline
+{\em countries} & set of countries already visited \\
+\hline
+{\em cities} & set of cities already visited \\
+\hline
+{\em n\+\_\+airports} & nr of airports already visited \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classMenu_a90e2633c243d79c74bebae1583140cf6}\label{classMenu_a90e2633c243d79c74bebae1583140cf6} 
+\index{Menu@{Menu}!f1\_shortest\_paths@{f1\_shortest\_paths}}
+\index{f1\_shortest\_paths@{f1\_shortest\_paths}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{f1\_shortest\_paths()}{f1\_shortest\_paths()}}
+{\footnotesize\ttfamily vector$<$ vector$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*} $>$ $>$ Menu\+::f1\+\_\+shortest\+\_\+paths (\begin{DoxyParamCaption}\item[{string}]{start,  }\item[{string}]{target }\end{DoxyParamCaption})}
+
+function based on shortest\+\_\+paths, except using a filter that turns the best flight option into the path that uses the minimum number of different airlines, 
+\begin{DoxyParams}{Parameters}
+{\em start} & code of source airport \\
+\hline
+{\em target} & code of target airport \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+best flight options, based on the filter 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a0e56c7a9a1f7aa3a42ff85fa229ef56b}\label{classMenu_a0e56c7a9a1f7aa3a42ff85fa229ef56b} 
+\index{Menu@{Menu}!findNearestAirports@{findNearestAirports}}
+\index{findNearestAirports@{findNearestAirports}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{findNearestAirports()}{findNearestAirports()}}
+{\footnotesize\ttfamily vector$<$ string $>$ Menu\+::find\+Nearest\+Airports (\begin{DoxyParamCaption}\item[{double}]{lat,  }\item[{double}]{lon }\end{DoxyParamCaption})}
+
+function that finds the nearest \doxylink{classAirport}{Airport(s)} based on the given latitude and longitude 
+\begin{DoxyParams}{Parameters}
+{\em lat} & given latitude \\
+\hline
+{\em lon} & given longitude \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a vector of airport codes that are the nearest to the given coordinates 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a63b670d080bdb4d9bff9502d68354ab9}\label{classMenu_a63b670d080bdb4d9bff9502d68354ab9} 
+\index{Menu@{Menu}!graph\_diameter@{graph\_diameter}}
+\index{graph\_diameter@{graph\_diameter}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{graph\_diameter()}{graph\_diameter()}}
+{\footnotesize\ttfamily vector$<$ pair$<$ int, pair$<$ \mbox{\hyperlink{classAirport}{Airport}}, \mbox{\hyperlink{classAirport}{Airport}} $>$ $>$ $>$ Menu\+::graph\+\_\+diameter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+calculates the flight trip(s) with the greatest number of stops \begin{DoxyReturn}{Returns}
+The maximum number of stops between two airports and the airports 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a728a72908eaea898443a490760daae57}\label{classMenu_a728a72908eaea898443a490760daae57} 
+\index{Menu@{Menu}!greatest\_air\_traffic@{greatest\_air\_traffic}}
+\index{greatest\_air\_traffic@{greatest\_air\_traffic}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{greatest\_air\_traffic()}{greatest\_air\_traffic()}}
+{\footnotesize\ttfamily vector$<$ pair$<$ int, \mbox{\hyperlink{classAirport}{Airport}} $>$ $>$ Menu\+::greatest\+\_\+air\+\_\+traffic (\begin{DoxyParamCaption}\item[{int}]{k }\end{DoxyParamCaption})}
+
+retrieves the top k airports by air traffic 
+\begin{DoxyParams}{Parameters}
+{\em k} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector of pairs, first is air traffic count and second is the airport 
+\end{DoxyReturn}
+\Hypertarget{classMenu_af12501d2fbe0d6005ba6c45eef1558e3}\label{classMenu_af12501d2fbe0d6005ba6c45eef1558e3} 
+\index{Menu@{Menu}!num\_countries\_airport@{num\_countries\_airport}}
+\index{num\_countries\_airport@{num\_countries\_airport}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{num\_countries\_airport()}{num\_countries\_airport()}}
+{\footnotesize\ttfamily int Menu\+::num\+\_\+countries\+\_\+airport (\begin{DoxyParamCaption}\item[{string}]{acode }\end{DoxyParamCaption})}
+
+countries flyable from a given airport 
+\begin{DoxyParams}{Parameters}
+{\em acode} & of the airport that we fly from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+nr of countries that the airport flies to 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a0b9007bbcff13e3a9425a70f6f61cd8a}\label{classMenu_a0b9007bbcff13e3a9425a70f6f61cd8a} 
+\index{Menu@{Menu}!num\_countries\_city@{num\_countries\_city}}
+\index{num\_countries\_city@{num\_countries\_city}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{num\_countries\_city()}{num\_countries\_city()}}
+{\footnotesize\ttfamily int Menu\+::num\+\_\+countries\+\_\+city (\begin{DoxyParamCaption}\item[{string}]{city }\end{DoxyParamCaption})}
+
+countries flyable from a given city 
+\begin{DoxyParams}{Parameters}
+{\em city} & that we fly from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+nr of countries that the city flies to 
+\end{DoxyReturn}
+\Hypertarget{classMenu_ab9d45569f5abc032e111a0083a4579d0}\label{classMenu_ab9d45569f5abc032e111a0083a4579d0} 
+\index{Menu@{Menu}!num\_flights\_airlines@{num\_flights\_airlines}}
+\index{num\_flights\_airlines@{num\_flights\_airlines}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{num\_flights\_airlines()}{num\_flights\_airlines()}}
+{\footnotesize\ttfamily int Menu\+::num\+\_\+flights\+\_\+airlines (\begin{DoxyParamCaption}\item[{string}]{acode }\end{DoxyParamCaption})}
+
+retrieves the amount of flights that an airline does 
+\begin{DoxyParams}{Parameters}
+{\em acode} & of the airline \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the number of in and out flights in a determined airline. 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a860e6011af372b2171f7e2cb7b0f0480}\label{classMenu_a860e6011af372b2171f7e2cb7b0f0480} 
+\index{Menu@{Menu}!num\_flights\_city@{num\_flights\_city}}
+\index{num\_flights\_city@{num\_flights\_city}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{num\_flights\_city()}{num\_flights\_city()}}
+{\footnotesize\ttfamily int Menu\+::num\+\_\+flights\+\_\+city (\begin{DoxyParamCaption}\item[{string}]{name }\end{DoxyParamCaption})}
+
+retrieves the amount of flights that a city receives and release 
+\begin{DoxyParams}{Parameters}
+{\em name} & of the desired city \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the number of in and out flights in a determined city. 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a6e8220f16ad706801346fbaa22ec266c}\label{classMenu_a6e8220f16ad706801346fbaa22ec266c} 
+\index{Menu@{Menu}!numFlightsAirlines@{numFlightsAirlines}}
+\index{numFlightsAirlines@{numFlightsAirlines}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{numFlightsAirlines()}{numFlightsAirlines()}}
+{\footnotesize\ttfamily pair$<$ int, int $>$ Menu\+::num\+Flights\+Airlines (\begin{DoxyParamCaption}\item[{string}]{apcode }\end{DoxyParamCaption})}
+
+nr of flights and different airlines from a given airport 
+\begin{DoxyParams}{Parameters}
+{\em apcode} & of the source airport \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pair of number of flights and airlines used 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a40df3c2bce4f36fe053f4a97e5f18b3e}\label{classMenu_a40df3c2bce4f36fe053f4a97e5f18b3e} 
+\index{Menu@{Menu}!shortest\_paths@{shortest\_paths}}
+\index{shortest\_paths@{shortest\_paths}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{shortest\_paths()}{shortest\_paths()}}
+{\footnotesize\ttfamily vector$<$ vector$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ $>$ Menu\+::shortest\+\_\+paths (\begin{DoxyParamCaption}\item[{string}]{source,  }\item[{string}]{target }\end{DoxyParamCaption})}
+
+function that returns the shortest path between two destinations 
+\begin{DoxyParams}{Parameters}
+{\em source} & the code of source airport \\
+\hline
+{\em target} & the code of target airport \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the best flight options between two airports in a vector of vectors of airports 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a63be7c94035f0d3528cd1d7cf0a0e1d4}\label{classMenu_a63be7c94035f0d3528cd1d7cf0a0e1d4} 
+\index{Menu@{Menu}!shortest\_paths2@{shortest\_paths2}}
+\index{shortest\_paths2@{shortest\_paths2}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{shortest\_paths2()}{shortest\_paths2()}}
+{\footnotesize\ttfamily vector$<$ vector$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classAirport}{Airport}} $>$ \texorpdfstring{$\ast$}{*} $>$ $>$ Menu\+::shortest\+\_\+paths2 (\begin{DoxyParamCaption}\item[{string}]{source,  }\item[{string}]{target }\end{DoxyParamCaption})}
+
+Very similar to shortest\+\_\+paths, the difference is in the return type 
+\begin{DoxyParams}{Parameters}
+{\em source} & the code of source airport \\
+\hline
+{\em target} & the code of target airport \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the best flight options between two airports in a vector of vectors of vertexes of airports 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a613a5d1e1088915e7b585d175e32ad24}\label{classMenu_a613a5d1e1088915e7b585d175e32ad24} 
+\index{Menu@{Menu}!totalAirports@{totalAirports}}
+\index{totalAirports@{totalAirports}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{totalAirports()}{totalAirports()}}
+{\footnotesize\ttfamily int Menu\+::total\+Airports (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+function that retrieves total nr of airports \begin{DoxyReturn}{Returns}
+nr of airports 
+\end{DoxyReturn}
+\Hypertarget{classMenu_a6937e54eb97e626055b336e4aeaeca3e}\label{classMenu_a6937e54eb97e626055b336e4aeaeca3e} 
+\index{Menu@{Menu}!totalFlights@{totalFlights}}
+\index{totalFlights@{totalFlights}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{totalFlights()}{totalFlights()}}
+{\footnotesize\ttfamily int Menu\+::total\+Flights (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+function that retrieves total nr of flights \begin{DoxyReturn}{Returns}
+nr of flights 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/davidmg/\+Documents/school/2\+ND\+\_\+\+YEAR/\+AED/graphs\+\_\+proj/src/Menu.\+h\item 
+/home/davidmg/\+Documents/school/2\+ND\+\_\+\+YEAR/\+AED/graphs\+\_\+proj/src/Menu.\+cpp\end{DoxyCompactItemize}

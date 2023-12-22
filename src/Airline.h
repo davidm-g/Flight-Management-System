@@ -4,7 +4,10 @@ using namespace std;
 
 #ifndef GRAPHPROJECT_AIRLINE_H
 #define GRAPHPROJECT_AIRLINE_H
-
+/**
+ * @class Airline
+ * @brief Portrays an airline, identifying it by code, name, callsign and country
+ */
 
 class Airline {
     private:

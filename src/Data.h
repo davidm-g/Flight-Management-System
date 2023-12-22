@@ -12,7 +12,10 @@
 
 #ifndef GRAPHPROJECT_DATA_H
 #define GRAPHPROJECT_DATA_H
-
+/**
+ * @class Data
+ * @brief Represents the data that was parsed from the csv files.
+ */
 using namespace std;
 class Data {
     private:

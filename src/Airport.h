@@ -4,7 +4,10 @@ using namespace std;
 
 #ifndef GRAPHPROJECT_AIRPORT_H
 #define GRAPHPROJECT_AIRPORT_H
-
+/**
+ * @class Airport
+ * @brief Identifies the Airport class by its code, name,city,country and coordinates.
+ */
 class Airport {
     private:
         string code;

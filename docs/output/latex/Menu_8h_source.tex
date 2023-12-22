@@ -1,0 +1,49 @@
+\doxysection{Menu.\+h}
+\hypertarget{Menu_8h_source}{}\label{Menu_8h_source}\index{/home/davidmg/Documents/school/2ND\_YEAR/AED/graphs\_proj/src/Menu.h@{/home/davidmg/Documents/school/2ND\_YEAR/AED/graphs\_proj/src/Menu.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GRAPHPROJECT\_MENU\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GRAPHPROJECT\_MENU\_H}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}Data.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <queue>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classMenu}{Menu}}\ \{}
+\DoxyCodeLine{00020\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{classData}{Data}}\ d;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{classMenu_ad466dd83355124a6ed958430450bfe94}{Menu}}();}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classMenu_a613a5d1e1088915e7b585d175e32ad24}{totalAirports}}();}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classMenu_a6937e54eb97e626055b336e4aeaeca3e}{totalFlights}}();}
+\DoxyCodeLine{00027\ \ \ \ \ pair<int,\ int>\ \mbox{\hyperlink{classMenu_a6e8220f16ad706801346fbaa22ec266c}{numFlightsAirlines}}(\textcolor{keywordtype}{string}\ apcode);}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classMenu_ab9d45569f5abc032e111a0083a4579d0}{num\_flights\_airlines}}(\textcolor{keywordtype}{string}\ acode);}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classMenu_a860e6011af372b2171f7e2cb7b0f0480}{num\_flights\_city}}(\textcolor{keywordtype}{string}\ name);}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classMenu_a0b9007bbcff13e3a9425a70f6f61cd8a}{num\_countries\_city}}(\textcolor{keywordtype}{string}\ city);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classMenu_af12501d2fbe0d6005ba6c45eef1558e3}{num\_countries\_airport}}(\textcolor{keywordtype}{string}\ acode);}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMenu_a4502446683102bb2c726e0dca50039d9}{bfs\_Stops}}(\textcolor{keywordtype}{string}\ acode,\ \textcolor{keywordtype}{int}\ max\_stops);}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMenu_aca27cb07daef3208a8255e2c1157abb6}{dfs\_Des}}(\textcolor{keywordtype}{string}\ acode);}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMenu_aceef239ba11fcd0d06279c7fdec8ce5f}{dfs\_Visit\_Des}}(\mbox{\hyperlink{classVertex}{Vertex<Airport>}}\ *\ v\ ,\ unordered\_set<string>\&\ countries,unordered\_set<string>\&\ cities,\ \textcolor{keywordtype}{int}\&\ n\_airports);}
+\DoxyCodeLine{00035\ \ \ \ \ vector<pair<int,pair<Airport,Airport>>>\mbox{\hyperlink{classMenu_a63b670d080bdb4d9bff9502d68354ab9}{graph\_diameter}}();}
+\DoxyCodeLine{00036\ \ \ \ \ vector<pair<int,Airport>>\ \mbox{\hyperlink{classMenu_a728a72908eaea898443a490760daae57}{greatest\_air\_traffic}}(\textcolor{keywordtype}{int}\ k);}
+\DoxyCodeLine{00037\ \ \ \ \ set<Airport>\ \mbox{\hyperlink{classMenu_ab1514dc6c6554d2f2b74708d2413951b}{Articu\_points}}();}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMenu_a722fd1b50e6113a0197af4c736039a3c}{dfs\_arti}}(\mbox{\hyperlink{classVertex}{Vertex<Airport>}}*\ v,\ stack<Airport>\&\ s,\ set<Airport>\&\ res,\ \textcolor{keywordtype}{int}\&\ i);}
+\DoxyCodeLine{00039\ \ \ \ \ vector<vector<Airport>>\ shortest\_distance\_airports(\textcolor{keywordtype}{string}\ source,\ \textcolor{keywordtype}{string}\ target);}
+\DoxyCodeLine{00040\ \ \ \ \ vector<string>\ \mbox{\hyperlink{classMenu_a0e56c7a9a1f7aa3a42ff85fa229ef56b}{findNearestAirports}}(\textcolor{keywordtype}{double}\ lat,\ \textcolor{keywordtype}{double}\ lon);}
+\DoxyCodeLine{00041\ \ \ \ \ vector<std::vector<Airport>>\ \mbox{\hyperlink{classMenu_a40df3c2bce4f36fe053f4a97e5f18b3e}{shortest\_paths}}(\textcolor{keywordtype}{string}\ start,\textcolor{keywordtype}{string}\ end);}
+\DoxyCodeLine{00042\ \ \ \ \ vector<std::vector<Airport>>\ shortest\_paths\_min\_airlines(\textcolor{keywordtype}{string}\ start,\textcolor{keywordtype}{string}\ end);}
+\DoxyCodeLine{00043\ \ \ \ \ vector<string>\ \mbox{\hyperlink{classMenu_a81ba691a7ef4b8b45a8a08857653f865}{city\_airports}}(\textcolor{keywordtype}{string}\ city);}
+\DoxyCodeLine{00044\ \ \ \ \ vector<vector<Vertex<Airport>*>>\ \mbox{\hyperlink{classMenu_a90e2633c243d79c74bebae1583140cf6}{f1\_shortest\_paths}}(\textcolor{keywordtype}{string}\ start,\ \textcolor{keywordtype}{string}\ target);}
+\DoxyCodeLine{00045\ \ \ \ \ vector<vector<Vertex<Airport>*>>\ \mbox{\hyperlink{classMenu_a63be7c94035f0d3528cd1d7cf0a0e1d4}{shortest\_paths2}}(\textcolor{keywordtype}{string}\ source,\ \textcolor{keywordtype}{string}\ target);}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{int}\ countAirlineChanges(vector<\mbox{\hyperlink{classVertex}{Vertex<Airport>}}*>\ path);}
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//GRAPHPROJECT\_MENU\_H}}
+
+\end{DoxyCode}

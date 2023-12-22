@@ -1,0 +1,63 @@
+\doxysection{Graph\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classGraph}{}\label{classGraph}\index{Graph$<$ T $>$@{Graph$<$ T $>$}}
+
+
+The main class, where the structure used for all the project resides.  
+
+
+
+
+{\ttfamily \#include $<$graph.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGraph_a8b7b7465fbfd562e2a469f90a437ab75}\label{classGraph_a8b7b7465fbfd562e2a469f90a437ab75} 
+\mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ \texorpdfstring{$\ast$}{*} {\bfseries find\+Vertex} (const T \&in) const
+\item 
+\Hypertarget{classGraph_a0853eac15cdf0f06d63f4b8a7820ec71}\label{classGraph_a0853eac15cdf0f06d63f4b8a7820ec71} 
+int {\bfseries get\+Num\+Vertex} () const
+\item 
+\Hypertarget{classGraph_a00be284ea2be3b3d0f0d2e493b70245b}\label{classGraph_a00be284ea2be3b3d0f0d2e493b70245b} 
+bool {\bfseries add\+Vertex} (const T \&in)
+\item 
+\Hypertarget{classGraph_aafdc0db4c2b6e3ca376d0d1a45d79cf0}\label{classGraph_aafdc0db4c2b6e3ca376d0d1a45d79cf0} 
+void {\bfseries add\+Vertex} (\mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ \texorpdfstring{$\ast$}{*}in)
+\item 
+\Hypertarget{classGraph_af9c903104ad69a7782979fa9caedf163}\label{classGraph_af9c903104ad69a7782979fa9caedf163} 
+bool {\bfseries remove\+Vertex} (const T \&in)
+\item 
+\Hypertarget{classGraph_afcd4f0b5c57c070c2a4c3ad8f2293ef9}\label{classGraph_afcd4f0b5c57c070c2a4c3ad8f2293ef9} 
+bool {\bfseries add\+Edge} (const T \&sourc, const T \&dest, string AC, double w)
+\item 
+\Hypertarget{classGraph_a1106092a37366486cf55576f9ec01692}\label{classGraph_a1106092a37366486cf55576f9ec01692} 
+bool {\bfseries remove\+Edge} (const T \&sourc, const T \&dest)
+\item 
+\Hypertarget{classGraph_a923b43995f81ad9319bbc81a1e433e64}\label{classGraph_a923b43995f81ad9319bbc81a1e433e64} 
+vector$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ \texorpdfstring{$\ast$}{*} $>$ {\bfseries get\+Vertex\+Set} () const
+\item 
+\Hypertarget{classGraph_a911798b1a89f8c4ae90ba3eee849cff8}\label{classGraph_a911798b1a89f8c4ae90ba3eee849cff8} 
+vector$<$ T $>$ {\bfseries dfs} () const
+\item 
+\Hypertarget{classGraph_a510522c8221b321a82e687fe2f2cb484}\label{classGraph_a510522c8221b321a82e687fe2f2cb484} 
+vector$<$ T $>$ {\bfseries dfs} (const T \&source) const
+\item 
+\Hypertarget{classGraph_aa47a4130165550e208e7a063fce6983a}\label{classGraph_aa47a4130165550e208e7a063fce6983a} 
+vector$<$ T $>$ {\bfseries bfs} (const T \&source) const
+\item 
+\Hypertarget{classGraph_af1d4affd1f886bf598d0f4cf4a0cb7cb}\label{classGraph_af1d4affd1f886bf598d0f4cf4a0cb7cb} 
+vector$<$ T $>$ {\bfseries topsort} () const
+\item 
+\Hypertarget{classGraph_a1ea1512afe5ab878301bc806c2eba9d2}\label{classGraph_a1ea1512afe5ab878301bc806c2eba9d2} 
+bool {\bfseries is\+DAG} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class T$>$\newline
+class Graph$<$ T $>$}
+The main class, where the structure used for all the project resides. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/davidmg/\+Documents/school/2\+ND\+\_\+\+YEAR/\+AED/graphs\+\_\+proj/src/graph.\+h\end{DoxyCompactItemize}

@@ -1,4 +1,4 @@
-C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/GraphProject/cmake-build-debug/CMakeFiles/GraphProject.dir
-C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/GraphProject/cmake-build-debug/CMakeFiles/Doxygen.dir
-C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/GraphProject/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/GraphProject/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/davidmg/Documents/school/2ND_YEAR/AED/graphs_proj/cmake-build-debug/CMakeFiles/GraphProject.dir
+/home/davidmg/Documents/school/2ND_YEAR/AED/graphs_proj/cmake-build-debug/CMakeFiles/Doxygen.dir
+/home/davidmg/Documents/school/2ND_YEAR/AED/graphs_proj/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/davidmg/Documents/school/2ND_YEAR/AED/graphs_proj/cmake-build-debug/CMakeFiles/rebuild_cache.dir

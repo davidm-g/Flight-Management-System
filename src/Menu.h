@@ -9,7 +9,13 @@
 #include <algorithm>
 #include <map>
 #include <limits>
-
+/**
+ * @class Menu
+ * @brief Represents the user-friendly interface for the flight management system.
+ * It shows available functionalities and their corresponding outputs in a clear, organized,
+ * and logical manner, facilitating seamless program utilization and straightforward result
+ * interpretation.
+ */
 class Menu {
 private:
     Data d;
@@ -23,8 +29,6 @@ public:
     int num_flights_city(string name);
     int num_countries_city(string city);
     int num_countries_airport(string acode);
-    int num_cities_airport(string acode);
-    int num_airports_airport(string acode);
     void bfs_Stops(string acode, int max_stops);
     void dfs_Des(string acode);
     void dfs_Visit_Des(Vertex<Airport> * v , unordered_set<string>& countries,unordered_set<string>& cities, int& n_airports);

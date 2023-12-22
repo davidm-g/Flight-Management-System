@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/GraphProject.dir/src/main.cpp.o CMakeFiles/GraphProject.dir/src/Data.cpp.o CMakeFiles/GraphProject.dir/src/Menu.cpp.o CMakeFiles/GraphProject.dir/src/Airline.cpp.o CMakeFiles/GraphProject.dir/src/Airport.cpp.o -o GraphProject 

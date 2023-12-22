@@ -18,7 +18,11 @@ template <class T> class Vertex;
 
 
 /****************** Provided structures  ********************/
-
+/**
+ * @class Vertex
+ * @tparam T
+ * @brief For this specific project, a vertex's info is an Airport
+ */
 template <class T>
 class Vertex {
     T info;                // contents
@@ -56,7 +60,11 @@ public:
 
     friend class Graph<T>;
 };
-
+/**
+ * @class Edge
+ * @tparam T
+ * @brief For this specific project, an edge represents a Flight
+ */
 template <class T>
 class Edge {
     Vertex<T> * dest;      // destination vertex
@@ -74,6 +82,11 @@ public:
     friend class Vertex<T>;
 };
 
+/**
+ * @class Graph
+ * @brief The main class, where the structure used for all the project resides.
+ *
+ */
 template <class T>
 class Graph {
     vector<Vertex<T> *> vertexSet;      // vertex set

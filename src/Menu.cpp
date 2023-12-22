@@ -8,6 +8,9 @@
 #include <float.h>
 
 using namespace std;
+/**
+ * Menu constructor - parse the csv files
+ */
 Menu::Menu() {
     this->d = Data();
     d.parse_airports();
@@ -15,9 +18,18 @@ Menu::Menu() {
     d.parse_flights();
 }
 
+/**
+ * function that retrieves total nr of airports
+ * @return nr of airports
+ */
 int Menu::totalAirports(){
     return d.getAP().getVertexSet().size();
 }
+
+/**
+ * function that retrieves total nr of flights
+ * @return nr of flights
+ */
 int Menu::totalFlights(){
     int tflights = 0;
     for(auto v : d.getAP().getVertexSet()){
@@ -25,6 +37,12 @@ int Menu::totalFlights(){
     }
     return tflights;
 }
+
+/**
+ * countries flyable from a given city
+ * @param city that we fly from
+ * @return nr of countries that the city flies to
+ */
  int Menu::num_countries_city(std::string city){
     int count=0;
     set<string> used_countries;
@@ -41,6 +59,11 @@ int Menu::totalFlights(){
          return count;
 }
 
+/**
+ * countries flyable from a given airport
+ * @param acode of the airport that we fly from
+ * @return nr of countries that the airport flies to
+ */
 int Menu::num_countries_airport(std::string acode) {
     int count=0;
     set<string> used_countries;
@@ -56,38 +79,13 @@ int Menu::num_countries_airport(std::string acode) {
     }
     return count;
 }
-int Menu::num_cities_airport(std::string acode) {
-    int count=0;
-    set<string> used_cities;
-    for(auto v : d.getAP().getVertexSet()){
-        if(v->getInfo().getCode() == acode){
-            for(auto edge:v->getAdj()){
-                if(used_cities.find(edge.getDest()->getInfo().getCity())== used_cities.end()){
-                    count++;
-                    used_cities.insert(edge.getDest()->getInfo().getCity());
-                }
-            }
-        }
-    }
-    return count;
-}
-int Menu::num_airports_airport(string acode){
-    int count=0;
-    set<string> used_airports;
-    for(auto v : d.getAP().getVertexSet()){
-        if(v->getInfo().getCode() == acode){
-            for(auto edge:v->getAdj()){
-                if(used_airports.find(edge.getDest()->getInfo().getCode()) == used_airports.end()){
-                    count++;
-                    used_airports.insert(edge.getDest()->getInfo().getCode());
-                }
-            }
-        }
-    }
-    return count;
-}
 
 
+/**
+ * nr of flights and different airlines from a given airport
+ * @param apcode of the source airport
+ * @return pair of number of flights and airlines used
+ */
 pair<int, int> Menu::numFlightsAirlines(string apcode){
     set<string> used_airlines;
     Graph<Airport> grafo=d.getAP();
@@ -107,6 +105,11 @@ pair<int, int> Menu::numFlightsAirlines(string apcode){
     }
     return make_pair(n_voos, n_airlines);
 }
+/**
+ * retrieves the amount of flights that a city receives and release
+ * @param name of the desired city
+ * @return the number of in and out flights in a determined city.
+ */
 int Menu::num_flights_city(string name){
     int count = 0;
     for(auto v : d.getAP().getVertexSet()){
@@ -116,7 +119,11 @@ int Menu::num_flights_city(string name){
     }
     return count;
 }
-
+/**
+ * retrieves the amount of flights that an airline does
+ * @param acode of the airline
+ * @return the number of in and out flights in a determined airline.
+ */
 int Menu::num_flights_airlines(std::string acode) {
     int n_voos = 0;
     for(auto v : d.getAP().getVertexSet()){
@@ -127,6 +134,11 @@ int Menu::num_flights_airlines(std::string acode) {
     return n_voos;
 }
 
+/**
+ * Reachable destinations with x stops
+ * @param acode
+ * @param max_stops
+ */
 void Menu::bfs_Stops(std::string acode, int max_stops) {
     int n_airports = 0;
     queue<pair<int,Vertex<Airport>*>> q;
@@ -161,6 +173,11 @@ void Menu::bfs_Stops(std::string acode, int max_stops) {
     << " with " << max_stops <<" max lay-overs is, respectively: "
     << n_airports << " " << cities.size() << " "<< countries.size() <<'\n';
 }
+
+/**
+ * Nr of destinations from airport
+ * @param acode of the starting airport
+ */
 void Menu::dfs_Des(string acode){
     int n_airports = 0;
     unordered_set<string> countries;
@@ -174,6 +191,13 @@ void Menu::dfs_Des(string acode){
 
 }
 
+/**
+ * auxiliary function for dfs_des
+ * @param v vertex being visited
+ * @param countries set of countries already visited
+ * @param cities set of cities already visited
+ * @param n_airports nr of airports already visited
+ */
 void Menu::dfs_Visit_Des(Vertex<Airport> * v , unordered_set<string>& countries,
                           unordered_set<string>& cities, int& n_airports){
 
@@ -194,6 +218,10 @@ void Menu::dfs_Visit_Des(Vertex<Airport> * v , unordered_set<string>& countries,
 
 }
 
+/**
+ * calculates the flight trip(s) with the greatest number of stops
+ * @return The maximum number of stops between two airports and the airports
+ */
 vector<pair<int, pair<Airport,Airport> >> Menu::graph_diameter() {
     int m_distance = 0;
     vector<pair<int,pair<Airport,Airport>>> re;
@@ -227,7 +255,11 @@ vector<pair<int, pair<Airport,Airport> >> Menu::graph_diameter() {
     return res;
 
 }
-
+/**
+ * retrieves the top k airports by air traffic
+ * @param k
+ * @return vector of pairs, first is air traffic count and second is the airport
+ */
 vector<pair<int,Airport>> Menu::greatest_air_traffic(int k){
 
     vector<pair<int,Airport>> temp;
@@ -243,7 +275,10 @@ vector<pair<int,Airport>> Menu::greatest_air_traffic(int k){
     return res;
 
 }
-
+/**
+ * Delivers the airports that are essential to networks circulation capability
+ * @return a set of articulation points
+ */
 set<Airport>Menu::Articu_points(){
     stack<Airport> S;
     set<Airport> res;
@@ -259,7 +294,9 @@ set<Airport>Menu::Articu_points(){
 
     return res;
 }
-
+/**
+ * auxiliary function for Articu_points
+ */
 void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, int& i) {
     v->setVisited(true);
     v->setLow(i);
@@ -281,7 +318,12 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, in
     }
     v->setProcessing(false);
 }
-
+/**
+ * function that returns the shortest path between two destinations
+ * @param source the code of source airport
+ * @param target the code of target airport
+ * @return the best flight options between two airports in a vector of vectors of airports
+ */
 vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
     queue<std::vector<Airport>> queue;
     set<Airport> visited;
@@ -338,7 +380,12 @@ vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
 
     return res;
 }
-
+/**
+ * Very similar to shortest_paths, the difference is in the return type
+ * @param source the code of source airport
+ * @param target the code of target airport
+ * @return the best flight options between two airports in a vector of vectors of vertexes of airports
+ */
 vector<vector<Vertex<Airport>*>> Menu::shortest_paths2(string source, string target) {
     queue<std::vector<Vertex<Airport>*>> queue;
     set<Airport> visited;
@@ -395,7 +442,11 @@ vector<vector<Vertex<Airport>*>> Menu::shortest_paths2(string source, string tar
 
     return res;
 }
-
+/**
+ * function to know the airports in a determined city
+ * @param city the name of the city
+ * @return vector of airport codes that are established on a given city
+ */
 vector<string> Menu::city_airports(string city){
     vector<string> res;
     for(auto vertex: d.getAP().getVertexSet()){
@@ -404,7 +455,14 @@ vector<string> Menu::city_airports(string city){
     }
     return res;
 }
-
+/**
+ * function to know the distance between two airports, by using its coordinates
+ * @param lat1 latitude of 1st airport
+ * @param lon1 longitude of 1st airport
+ * @param lat2 latitude of second airport
+ * @param lon2 longitude of second airport
+ * @return distance between two airports, in kilometers
+ */
 static double haversine(double lat1, double lon1,
                         double lat2, double lon2)
 {
@@ -427,7 +485,12 @@ static double haversine(double lat1, double lon1,
     double c = 2 * asin(sqrt(a));
     return rad * c;
 }
-
+/**
+ * function that finds the nearest Airport(s) based on the given latitude and longitude
+ * @param lat given latitude
+ * @param lon given longitude
+ * @return a vector of airport codes that are the nearest to the given coordinates
+ */
 vector<string> Menu::findNearestAirports(double lat, double lon) {
     vector<pair<double, string>> tmp;
     vector<string> res;
@@ -445,7 +508,13 @@ vector<string> Menu::findNearestAirports(double lat, double lon) {
     return res;
 }
 
-
+/**
+ * function based on shortest_paths, except using a filter that turns the best flight
+ * option into the path that uses the minimum number of different airlines,
+ * @param start code of source airport
+ * @param target code of target airport
+ * @return best flight options, based on the filter
+ */
 vector<vector<Vertex<Airport>*>> Menu::f1_shortest_paths(string start, string target){
     /*
     auto paths = shortest_paths2(start, target);
