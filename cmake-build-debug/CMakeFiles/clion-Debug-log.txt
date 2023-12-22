@@ -1,18 +1,18 @@
-/opt/clion-2023.2.2/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/davidmg/Documents/school/2ND_YEAR/AED/graphs_proj -B /home/davidmg/Documents/school/2ND_YEAR/AED/graphs_proj/cmake-build-debug
--- The C compiler identification is GNU 11.4.0
--- The CXX compiler identification is GNU 11.4.0
+"C:\Program Files\JetBrains\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj" -B "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj\cmake-build-debug"
+-- The C compiler identification is GNU 13.1.0
+-- The CXX compiler identification is GNU 13.1.0
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
--- Check for working C compiler: /usr/bin/cc - skipped
+-- Check for working C compiler: C:/Program Files/JetBrains/CLion 2023.2.2/bin/mingw/bin/gcc.exe - skipped
 -- Detecting C compile features
 -- Detecting C compile features - done
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Check for working CXX compiler: C:/Program Files/JetBrains/CLion 2023.2.2/bin/mingw/bin/g++.exe - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Found Doxygen: /usr/local/bin/doxygen (found version "1.10.0") found components: doxygen missing components: dot
+-- Found Doxygen: C:/Program Files/doxygen/bin/doxygen.exe (found version "1.9.8") found components: doxygen missing components: dot
 Doxygen build started
--- Configuring done (0.6s)
--- Generating done (0.0s)
--- Build files have been written to: /home/davidmg/Documents/school/2ND_YEAR/AED/graphs_proj/cmake-build-debug
+-- Configuring done (3.3s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/Graph_Project/graphs_proj/cmake-build-debug

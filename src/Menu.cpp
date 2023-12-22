@@ -185,7 +185,7 @@ void Menu::dfs_Des(string acode){
     for(auto v : d.getAP().getVertexSet()) v->setVisited(false);
     auto v=  d.getAP().findVertex(acode);
     dfs_Visit_Des(v,countries,cities,n_airports);
-    cout << "The number of new reachable airports, cities and countries from "<<v->getInfo().getName()
+    cout << "The number of reachable airports, cities and countries from "<<v->getInfo().getName()
          <<" is,respectively: "
          << n_airports<< ", "<< cities.size()<<", "<<countries.size()<<'\n';
 
@@ -515,86 +515,154 @@ vector<string> Menu::findNearestAirports(double lat, double lon) {
  * @param target code of target airport
  * @return best flight options, based on the filter
  */
-vector<vector<Vertex<Airport>*>> Menu::f1_shortest_paths(string start, string target){
-    /*
-    auto paths = shortest_paths2(start, target);
+vector<vector<Vertex<Airport>*>> Menu::f1_shortest_paths(string source, string target) {
+    auto res = shortest_paths2(source,target);
     vector<vector<Vertex<Airport>*>> res1;
-    vector<pair<int, vector<Vertex<Airport>*>>> finalPaths;
-    int minAirlineChanges = INT_MAX;
-
-    for (vector<Vertex<Airport>*> path : paths) {
-        int airlineChanges = countAirlineChanges(path);
-        if (airlineChanges <= minAirlineChanges) {
-            if (airlineChanges < minAirlineChanges) {
-                minAirlineChanges = airlineChanges;
-                finalPaths.clear();
-            }
-            finalPaths.push_back(make_pair(airlineChanges, path));
-        }
-    }
-
-    for (auto& path : finalPaths) {
-        if (path.first == minAirlineChanges) {
-            res1.push_back(path.second);
-        }
-    }
-
-    return res1;
-    */
-   auto res = shortest_paths2(start,target);
-    vector<vector<Vertex<Airport>*>> res1;
-   vector<pair<int, vector<Vertex<Airport>*>>> final;
-   int m = 0;
-   for(auto v : res){ //vector de vertices
-       unordered_map<string,int> acode;
-       for(int i = 0; i < v.size();i++){ //VERTICES
-           for(auto e : v[i]->getAdj()){
-               if(i + 1 < v.size() && e.getDest()==v[i+1]) {
-                   if(acode.find(e.getAirlinecode()) == acode.end()) acode[e.getAirlinecode()] = 1;
-                   else acode[e.getAirlinecode()]++;
-               }
-           }
-       }
-       int temp = 0;
-       for(auto a : acode){
-           if (a.second >= temp) temp = a.second;
-       }
-
-       if(temp >= m) m = temp;
-       final.push_back(make_pair(temp,v));
-   }
-   for(auto v : final){
-       if(v.first == m) res1.push_back(v.second);
-   }
-    return res1;
-
-}
-
-int Menu::countAirlineChanges(vector<Vertex<Airport>*> path) {
-    if (path.size() <= 1) {
-        return 0; // If the path has 0 or 1 vertex, there are no changes
-    }
-
-    int airlineChanges = 0;
-    for (size_t i = 0; i < path.size() - 1; ++i) {
-        auto edges = path[i]->getAdj();
-        bool found = false;
-        for (const auto& edge : edges) {
-            if (edge.getDest() == path[i + 1]) {
-                if (edge.getAirlinecode() != edges[0].getAirlinecode()) {
-                    found = true;
-                    break;
+    vector<pair<int, vector<Vertex<Airport>*>>> final;
+    int m = 0;
+    for(auto v : res){ //vector de vertices
+        unordered_map<string,int> acode;
+        for(int i = 0; i < v.size();i++){ //VERTICES
+            for(auto e : v[i]->getAdj()){
+                if(i + 1 < v.size() && e.getDest()==v[i+1]) {
+                    if(acode.find(e.getAirlinecode()) == acode.end()) acode[e.getAirlinecode()] = 1;
+                    else acode[e.getAirlinecode()]++;
                 }
             }
         }
-        if (!found) {
-            ++airlineChanges;
+        int temp = 0;
+        for(auto a : acode){
+            if (a.second >= temp) temp = a.second;
         }
+
+        if(temp >= m) m = temp;
+        final.push_back(make_pair(temp,v));
     }
-    return airlineChanges;
+    for(auto v : final){
+        if(v.first == m) res1.push_back(v.second);
+    }
+    return res1;
+
+
+
 }
 
 
+vector<vector<Vertex<Airport>*>> Menu::f2_shortest_paths(string source, string target, set<string> air){
+
+    queue<std::vector<Vertex<Airport>*>> queue;
+    set<Airport> visited;
+    vector<std::vector<Vertex<Airport>*>> paths; // todos os caminhos possiveis
+    vector<std::vector<Vertex<Airport>*>> res;  //caminhos mais curtos
+    vector<Vertex<Airport>*> path;
+    vector<Vertex<Airport>*> new_path;
+    int m = INT_MAX;
+    if (d.getAirports().find(source) == d.getAirports().end()) {
+        for(auto v : d.getAP().getVertexSet()){
+            if(v->getInfo().getName() == source){
+                source = v->getInfo().getCode();
+                break;
+            }
+        }
+    }
+    if (d.getAirports().find(target) == d.getAirports().end()) {
+        for(auto v : d.getAP().getVertexSet()){
+            if(v->getInfo().getName() == target){
+                target = v->getInfo().getCode();
+                break;
+            }
+        }
+    }
+    queue.push({d.getAirports()[source]});
+    Airport current_node;
+    while (!queue.empty()) {
+        path = queue.front();
+        current_node = path.back()->getInfo();
+        queue.pop();
+
+        if (current_node.getCode() == target) {
+            if(find(paths.begin(), paths.end(), path) == paths.end())
+                paths.push_back(path);
+        }
+
+        if (visited.find(current_node) == visited.end()) {
+            visited.insert(current_node);
+            for (auto e : d.getAirports()[current_node.getCode()]->getAdj()) {
+                if (visited.find(e.getDest()->getInfo()) == visited.end() && air.find(e.getAirlinecode()) != air.end()) {
+                    new_path = path;
+                    new_path.push_back(e.getDest());
+                    queue.push(new_path);
+                }
+            }
+        }
+    }
+    for(auto v : paths){
+        if(v.size() <= m) m = v.size();
+    }
+    for(auto v : paths){
+        if(v.size() == m) res.push_back(v);
+    }
+
+    return res;
+
+}
+vector<vector<Vertex<Airport>*>> Menu::f3_shortest_paths(string source, string target, set<string> countries) {
+
+    queue<std::vector<Vertex<Airport> *>> queue;
+    set<Airport> visited;
+    vector<std::vector<Vertex<Airport> *>> paths; // todos os caminhos possiveis
+    vector<std::vector<Vertex<Airport> *>> res;  //caminhos mais curtos
+    vector<Vertex<Airport> *> path;
+    vector<Vertex<Airport> *> new_path;
+    int m = INT_MAX;
+    if (d.getAirports().find(source) == d.getAirports().end()) {
+        for (auto v: d.getAP().getVertexSet()) {
+            if (v->getInfo().getName() == source) {
+                source = v->getInfo().getCode();
+                break;
+            }
+        }
+    }
+    if (d.getAirports().find(target) == d.getAirports().end()) {
+        for (auto v: d.getAP().getVertexSet()) {
+            if (v->getInfo().getName() == target) {
+                target = v->getInfo().getCode();
+                break;
+            }
+        }
+    }
+    queue.push({d.getAirports()[source]});
+    Airport current_node;
+    while (!queue.empty()) {
+        path = queue.front();
+        current_node = path.back()->getInfo();
+        queue.pop();
+
+        if (current_node.getCode() == target) {
+            if (find(paths.begin(), paths.end(), path) == paths.end())
+                paths.push_back(path);
+        }
+
+        if (visited.find(current_node) == visited.end() && countries.find(current_node.getCountry()) == countries.end()) {
+            visited.insert(current_node);
+            for (auto e: d.getAirports()[current_node.getCode()]->getAdj()) {
+                if (visited.find(e.getDest()->getInfo()) == visited.end() &&
+                    countries.find(e.getDest()->getInfo().getCountry()) == countries.end()) {
+                    new_path = path;
+                    new_path.push_back(e.getDest());
+                    queue.push(new_path);
+                }
+            }
+        }
+    }
+    for (auto v: paths) {
+        if (v.size() <= m) m = v.size();
+    }
+    for (auto v: paths) {
+        if (v.size() == m) res.push_back(v);
+    }
+
+    return res;
 
 
-
+}

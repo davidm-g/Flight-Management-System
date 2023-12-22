@@ -289,7 +289,6 @@ if(NOT DEFINED DOXYGEN_FILE_PATTERNS)
                          *.cxxm 
                          *.cpp 
                          *.cppm 
-                         *.ccm 
                          *.c++ 
                          *.c++m 
                          *.java 
@@ -379,6 +378,12 @@ if(NOT DEFINED DOXYGEN_USE_HTAGS)
 endif()
 if(NOT DEFINED DOXYGEN_VERBATIM_HEADERS)
     set(DOXYGEN_VERBATIM_HEADERS YES)
+endif()
+if(NOT DEFINED DOXYGEN_CLANG_ASSISTED_PARSING)
+    set(DOXYGEN_CLANG_ASSISTED_PARSING NO)
+endif()
+if(NOT DEFINED DOXYGEN_CLANG_ADD_INC_PATHS)
+    set(DOXYGEN_CLANG_ADD_INC_PATHS YES)
 endif()
 if(NOT DEFINED DOXYGEN_ALPHABETICAL_INDEX)
     set(DOXYGEN_ALPHABETICAL_INDEX YES)

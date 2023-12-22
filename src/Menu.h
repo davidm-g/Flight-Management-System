@@ -44,6 +44,9 @@ public:
     vector<vector<Vertex<Airport>*>> f1_shortest_paths(string start, string target);
     vector<vector<Vertex<Airport>*>> shortest_paths2(string source, string target);
     int countAirlineChanges(vector<Vertex<Airport>*> path);
+    vector<vector<Vertex<Airport>*>> f2_shortest_paths(string start, string target, set<string> air);
+    vector<vector<Vertex<Airport>*>> f3_shortest_paths(string start, string target, set<string> countries);
+
 };
 
 

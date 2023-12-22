@@ -1,5 +1,6 @@
 #include <iostream>
 #include <climits>
+#include <sstream>
 #include "Data.h"
 #include "Airport.h"
 #include "Airline.h"
@@ -9,9 +10,9 @@ using namespace std;
 int main() {
     Menu m = Menu();
     int choice;
-    bool filter_min_airlines;
-    bool filter_airlines_list;
-    bool filter_avoid_countries;
+    bool filter_min_airlines = false;
+    bool filter_airlines_list = false;
+    bool filter_avoid_countries = false;
     while (true) {
         cout << " _________________________________________ " << '\n';
         cout << "|      Flight Management System           |" << '\n';
@@ -53,8 +54,8 @@ int main() {
                 cout << "Type in the wanted airport code:";
                 cin >> acode;
                 pair<int, int> p = m.numFlightsAirlines(acode);
-                cout << p.first << "flights out of " << acode << " airport from "
-                    << p.second << "different airlines." << '\n';
+                cout << p.first << " flights out of " << acode << " airport from "
+                    << p.second << " different airlines." << '\n';
                 break;
             }
             case 4:{
@@ -75,7 +76,7 @@ int main() {
                         cout << "Enter the desired airline code: ";
                         string acode;
                         cin >> acode;
-                        cout << "The number of in and out flights from airline " << acode <<" is : " << m.num_flights_airlines(acode) << '\n' << '\n';
+                        cout << "The airline " << acode <<" operates in total : " << m.num_flights_airlines(acode) << " flights\n" << '\n';
                         break;
                     }
                     default: {
@@ -86,9 +87,9 @@ int main() {
                 break;
             }
             case 5: {
-                cout<<"1. Number of different countries for a given city: "<<endl;
-                cout<<"2. Number of different countries for a given airport: "<<endl;
-                cout << "Please enter your desired choice: ";
+                cout<<"1. Number of different countries that a given city fligths to: "<<endl;
+                cout<<"2. Number of different countries that a given airport flights to: "<<endl;
+                cout << "Please enter your desired choice:";
                 int escolha;
                 cin >> escolha;
                 cin.ignore(); // ignore the newline character that remained
@@ -116,7 +117,7 @@ int main() {
             }
             case 6: {
                 string acode;
-                cout << "Please enter the desire airport code:\n";
+                cout << "Please enter the desire airport code:";
                 cin >> acode;
                 m.dfs_Des(acode);
                 break;
@@ -140,12 +141,12 @@ int main() {
                 break;
             }
             case 9: {
-                cout<<"Please enter the number of airports to display in terms of number of flights ranking:"<<'\n';
+                cout<<"Please enter the number of airports to display in terms of number of flights ranking:";
                 int k;
                 cin>>k;
                 cout <<"The top " << k << " airports with the greatest air traffic capacity are: \n";
                 for(auto ap : m.greatest_air_traffic(k)){
-                    cout << ap.second.getName() << " located in " << ap.second.getCity()
+                    cout << "- " << ap.second.getName() << " located in " << ap.second.getCity()
                     << ", " << ap.second.getCountry() <<" with "<< ap.first << " flights.\n";
                 }
                 break;
@@ -188,25 +189,48 @@ int main() {
                         cout << '\n';
                         cout << "The best flight options between those two airports are:" << '\n';
                         vector<vector<Vertex<Airport>*>> temp;
+
                         if(filter_min_airlines) {
                             temp = m.f1_shortest_paths(source, target);
 
-                            for (auto v: temp) {
-                                for (int i = 0; i < v.size() - 1; i++) {
-                                    cout << v[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << v[(v.size() - 1)]->getInfo().getName();
-                                cout << "\n";
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airline codes followed by a ',':";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
                             }
+                            temp = m.f2_shortest_paths(source,target,air);
+
+                        }
+                        else if (filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            temp = m.f3_shortest_paths(source,target,countries);
+
                         }
                         else {
-                            for (auto v: m.shortest_paths2(source, target)) {
-                                for (int i = 0; i < v.size() - 1; i++) {
-                                    cout << v[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << v[(v.size() - 1)]->getInfo().getName();
-                                cout << "\n";
+                            temp = m.shortest_paths2(source,target);
+                        }
+                        for (auto v: temp) {
+                            for (int i = 0; i < v.size() - 1; i++) {
+                                cout << v[i]->getInfo().getName() << " --> ";
                             }
+                            cout << v[(v.size() - 1)]->getInfo().getName();
+                            cout << "\n";
                         }
 
                         break;
@@ -221,10 +245,53 @@ int main() {
                         getline(cin,target);
                         cout << '\n';
                         cout << "The best flight options between that airport and that city are: " << '\n';
-                        vector<vector<Airport>> res;
-                        for(string airport_code : m.city_airports(target)) {
-                            for (vector<Airport> v: m.shortest_paths(source, airport_code)) {
-                                res.push_back(v);
+                        vector<vector<Vertex<Airport>*>> res;
+                        if(filter_min_airlines){
+                            for(string airport_code : m.city_airports(target)) {
+                                for (auto v: m.f1_shortest_paths(source, airport_code)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airlines code:";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
+                            }
+                            for(string airport_code : m.city_airports(target)) {
+                                for (auto v: m.f2_shortest_paths(source, airport_code,air)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else if(filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            for(string airport_code : m.city_airports(target)) {
+                                for (auto v: m.f3_shortest_paths(source, airport_code,countries)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else {
+                            for(string airport_code : m.city_airports(target)) {
+                                for (auto v: m.shortest_paths2(source, airport_code)) {
+                                    res.push_back(v);
+                                }
                             }
                         }
 
@@ -237,9 +304,9 @@ int main() {
                         for(auto path : res){
                             if(path.size()==min){
                                 for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i].getName() << " --> ";
+                                    cout << path[i]->getInfo().getName() << " --> ";
                                 }
-                                cout << path[(path.size() - 1)].getName();
+                                cout << path[(path.size() - 1)]->getInfo().getName();
                                 cout << "\n";
                             }
                         }
@@ -259,10 +326,53 @@ int main() {
                         cin >> lon;
                         cout << '\n';
                         cout << "The best flight options between those two cities are: " << '\n';
-                        vector<vector<Airport>> res;
-                        for(string airport_code : m.findNearestAirports(lat, lon)) {
-                            for (vector<Airport> v: m.shortest_paths(source, airport_code)) {
-                                res.push_back(v);
+                        vector<vector<Vertex<Airport>*>> res;
+                        if(filter_min_airlines){
+                            for(string airport_code : m.findNearestAirports(lat, lon)) {
+                                for (auto v: m.f1_shortest_paths(source, airport_code)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airlines code:";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
+                            }
+                            for(string airport_code : m.findNearestAirports(lat, lon)) {
+                                for (auto v: m.f2_shortest_paths(source, airport_code, air)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else if(filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            for(string airport_code : m.findNearestAirports(lat, lon)) {
+                                for (auto v: m.f3_shortest_paths(source, airport_code, countries)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else {
+                            for(string airport_code : m.findNearestAirports(lat, lon)) {
+                                for (auto v: m.shortest_paths2(source, airport_code)) {
+                                    res.push_back(v);
+                                }
                             }
                         }
                         int min=INT_MAX;
@@ -274,9 +384,9 @@ int main() {
                         for(auto path : res){
                             if(path.size()==min){
                                 for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i].getName() << " --> ";
+                                    cout << path[i]->getInfo().getName() << " --> ";
                                 }
-                                cout << path[(path.size() - 1)].getName();
+                                cout << path[(path.size() - 1)]->getInfo().getName();
                                 cout << "\n";
                             }
                         }
@@ -292,10 +402,53 @@ int main() {
                         getline(cin,target);
                         cout << '\n';
                         cout << "The best flight options between that city and that airport are: " << '\n';
-                        vector<vector<Airport>> res;
-                        for(string airport_code : m.city_airports(source)) {
-                            for (vector<Airport> v: m.shortest_paths(airport_code, target)) {
-                                res.push_back(v);
+                        vector<vector<Vertex<Airport>*>> res;
+                        if(filter_min_airlines){
+                            for(string airport_code : m.city_airports(source)) {
+                                for (auto v: m.f1_shortest_paths(airport_code, target)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airlines code:";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
+                            }
+                            for(string airport_code : m.city_airports(source)) {
+                                for (auto v: m.f2_shortest_paths(airport_code, target, air)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else if(filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            for(string airport_code : m.city_airports(source)) {
+                                for (auto v: m.f3_shortest_paths(airport_code, target, countries)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else {
+                            for(string airport_code : m.city_airports(source)) {
+                                for (auto v: m.shortest_paths2(airport_code, target)) {
+                                    res.push_back(v);
+                                }
                             }
                         }
                         int min=INT_MAX;
@@ -307,9 +460,9 @@ int main() {
                         for(auto path : res){
                             if(path.size()==min){
                                 for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i].getName() << " --> ";
+                                    cout << path[i]->getInfo().getName() << " --> ";
                                 }
-                                cout << path[(path.size() - 1)].getName();
+                                cout << path[(path.size() - 1)]->getInfo().getName();
                                 cout << "\n";
                             }
                         }
@@ -325,11 +478,60 @@ int main() {
                         getline(cin, target);
                         cout << '\n';
                         cout << "The best flight options between those two cities are: " << '\n';
-                        vector<vector<Airport>> res;
-                        for (string airport_code: m.city_airports(source)) {
-                            for (string t: m.city_airports(target)) {
-                                for (vector<Airport> v: m.shortest_paths(airport_code, t)) {
-                                    res.push_back(v);
+                        vector<vector<Vertex<Airport>*>> res;
+                        if(filter_min_airlines){
+                            for (string airport_code: m.city_airports(source)) {
+                                for (string t: m.city_airports(target)) {
+                                    for (auto v: m.f1_shortest_paths(airport_code, t)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airlines code:";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
+                            }
+                            for (string airport_code: m.city_airports(source)) {
+                                for (string t: m.city_airports(target)) {
+                                    for (auto v: m.f2_shortest_paths(airport_code, t, air)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else if(filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            for (string airport_code: m.city_airports(source)) {
+                                for (string t: m.city_airports(target)) {
+                                    for (auto v: m.f3_shortest_paths(airport_code, t, countries)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            for (string airport_code: m.city_airports(source)) {
+                                for (string t: m.city_airports(target)) {
+                                    for (auto v: m.shortest_paths2(airport_code, t)) {
+                                        res.push_back(v);
+                                    }
                                 }
                             }
                         }
@@ -342,9 +544,9 @@ int main() {
                         for (auto path: res) {
                             if (path.size() == min) {
                                 for (int i = 0; i < path.size() - 1; i++) {
-                                    cout << path[i].getName() << " --> ";
+                                    cout << path[i]->getInfo().getName() << " --> ";
                                 }
-                                cout << path[(path.size() - 1)].getName();
+                                cout << path[(path.size() - 1)]->getInfo().getName();
                                 cout << "\n";
                             }
                         }
@@ -362,11 +564,60 @@ int main() {
                         cin >> lon;
                         cout << '\n';
                         cout << "The best flight options between those two cities are: " << '\n';
-                        vector<vector<Airport>> res;
-                        for(string ap_code_s : m.city_airports(source)) {
-                            for (string ap_code_t: m.findNearestAirports(lat, lon)) {
-                                for (vector<Airport> v: m.shortest_paths(ap_code_s, ap_code_t)) {
-                                    res.push_back(v);
+                        vector<vector<Vertex<Airport>*>> res;
+                        if(filter_min_airlines){
+                            for(string ap_code_s : m.city_airports(source)) {
+                                for (string ap_code_t: m.findNearestAirports(lat, lon)) {
+                                    for (auto v: m.f1_shortest_paths(ap_code_s, ap_code_t)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airlines code:";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
+                            }
+                            for(string ap_code_s : m.city_airports(source)) {
+                                for (string ap_code_t: m.findNearestAirports(lat, lon)) {
+                                    for (auto v: m.f2_shortest_paths(ap_code_s, ap_code_t, air)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else if(filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            for(string ap_code_s : m.city_airports(source)) {
+                                for (string ap_code_t: m.findNearestAirports(lat, lon)) {
+                                    for (auto v: m.f3_shortest_paths(ap_code_s, ap_code_t, countries)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            for(string ap_code_s : m.city_airports(source)) {
+                                for (string ap_code_t: m.findNearestAirports(lat, lon)) {
+                                    for (auto v: m.shortest_paths2(ap_code_s, ap_code_t)) {
+                                        res.push_back(v);
+                                    }
                                 }
                             }
                         }
@@ -379,9 +630,9 @@ int main() {
                         for(auto path : res){
                             if(path.size()==min){
                                 for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i].getName() << " --> ";
+                                    cout << path[i]->getInfo().getName() << " --> ";
                                 }
-                                cout << path[(path.size() - 1)].getName();
+                                cout << path[(path.size() - 1)]->getInfo().getName();
                                 cout << "\n";
                             }
                         }
@@ -399,12 +650,54 @@ int main() {
                         cin >> target;
                         cout << '\n';
                         cout << "The best flight options between those two cities are: " << '\n';
-                        vector<vector<Airport>> res;
-                        for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                            for (vector<Airport> v: m.shortest_paths(ap_code_s, target)) {
-                                res.push_back(v);
+                        vector<vector<Vertex<Airport>*>> res;
+                        if(filter_min_airlines){
+                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                                for (auto v: m.f1_shortest_paths(ap_code_s, target)) {
+                                    res.push_back(v);
+                                }
                             }
-
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airlines code:";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
+                            }
+                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                                for (auto v: m.f2_shortest_paths(ap_code_s, target, air)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else if(filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                                for (auto v: m.f3_shortest_paths(ap_code_s, target, countries)) {
+                                    res.push_back(v);
+                                }
+                            }
+                        }
+                        else {
+                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                                for (auto v: m.shortest_paths2(ap_code_s, target)) {
+                                    res.push_back(v);
+                                }
+                            }
                         }
                         int min=INT_MAX;
                         for(auto path: res) {
@@ -415,9 +708,9 @@ int main() {
                         for(auto path : res){
                             if(path.size()==min){
                                 for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i].getName() << " --> ";
+                                    cout << path[i]->getInfo().getName() << " --> ";
                                 }
-                                cout << path[(path.size() - 1)].getName();
+                                cout << path[(path.size() - 1)]->getInfo().getName();
                                 cout << "\n";
                             }
                         }
@@ -435,11 +728,60 @@ int main() {
                         cin >> target;
                         cout << '\n';
                         cout << "The best flight options between those two cities are: " << '\n';
-                        vector<vector<Airport>> res;
-                        for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                            for (string ap_code_t: m.city_airports(target)) {
-                                for (vector<Airport> v: m.shortest_paths(ap_code_s, ap_code_t)) {
-                                    res.push_back(v);
+                        vector<vector<Vertex<Airport>*>> res;
+                        if(filter_min_airlines){
+                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                                for (string ap_code_t: m.city_airports(target)) {
+                                    for (auto v: m.f1_shortest_paths(ap_code_s, ap_code_t)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airlines code:";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
+                            }
+                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                                for (string ap_code_t: m.city_airports(target)) {
+                                    for (auto v: m.f2_shortest_paths(ap_code_s, ap_code_t, air)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else if(filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                                for (string ap_code_t: m.city_airports(target)) {
+                                    for (auto v: m.f3_shortest_paths(ap_code_s, ap_code_t, countries)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
+                                for (string ap_code_t: m.city_airports(target)) {
+                                    for (auto v: m.shortest_paths2(ap_code_s, ap_code_t)) {
+                                        res.push_back(v);
+                                    }
                                 }
                             }
                         }
@@ -452,9 +794,9 @@ int main() {
                         for(auto path : res){
                             if(path.size()==min){
                                 for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i].getName() << " --> ";
+                                    cout << path[i]->getInfo().getName() << " --> ";
                                 }
-                                cout << path[(path.size() - 1)].getName();
+                                cout << path[(path.size() - 1)]->getInfo().getName();
                                 cout << "\n";
                             }
                         }
@@ -474,11 +816,60 @@ int main() {
                         cin >> lon2;
                         cout << '\n';
                         cout << "The best flight options between those two cities are: " << '\n';
-                        vector<vector<Airport>> res;
-                        for(string ap_code_s : m.findNearestAirports(lat1, lon1)) {
-                            for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
-                                for (vector<Airport> v: m.shortest_paths(ap_code_s, ap_code_t)) {
-                                    res.push_back(v);
+                        vector<vector<Vertex<Airport>*>> res;
+                        if(filter_min_airlines) {
+                            for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {
+                                for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
+                                    for (auto v: m.f1_shortest_paths(ap_code_s, ap_code_t)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else if(filter_airlines_list){
+                            set<string> air;
+                            string acode;
+                            cout << "Please insert the preferred airlines code:";
+                            string line;
+                            getline(cin, line);
+                            air.insert(acode);
+                            istringstream iss(line);
+                            while(getline(iss, acode, ',')) {
+                                air.insert(acode);
+                            }
+                            for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {
+                                for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
+                                    for (auto v: m.f2_shortest_paths(ap_code_s, ap_code_t,air)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else if(filter_avoid_countries){
+                            set<string> countries;
+                            string country;
+                            cout << "Please insert the countries to avoid:";
+                            string line;
+                            getline(cin, line);
+                            countries.insert(country);
+                            istringstream iss(line);
+                            while(getline(iss, country, ',')) {
+                                countries.insert(country);
+                            }
+                            for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {
+                                for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
+                                    for (auto v: m.f3_shortest_paths(ap_code_s, ap_code_t,countries)) {
+                                        res.push_back(v);
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {
+                                for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
+                                    for (auto v: m.shortest_paths2(ap_code_s, ap_code_t)) {
+                                        res.push_back(v);
+                                    }
                                 }
                             }
                         }
@@ -491,9 +882,9 @@ int main() {
                         for(auto path : res){
                             if(path.size()==min){
                                 for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i].getName() << " --> ";
+                                    cout << path[i]->getInfo().getName() << " --> ";
                                 }
-                                cout << path[(path.size() - 1)].getName();
+                                cout << path[(path.size() - 1)]->getInfo().getName();
                                 cout << "\n";
                             }
                         }
