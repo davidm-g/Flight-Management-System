@@ -6,8 +6,7 @@
 #include <queue>
 #include <stack>
 #include <list>
-#include "Airline.h"
-#include "Airport.h"
+#include <string>
 
 
 using namespace std;

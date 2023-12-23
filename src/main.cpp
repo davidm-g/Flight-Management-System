@@ -1,16 +1,11 @@
 #include <iostream>
 #include <climits>
 #include <sstream>
-#include "Data.h"
-#include "Airport.h"
-#include "Airline.h"
-#include "graph.h"
-#include "Menu.h"
 #include "FlightOption.h"
 using namespace std;
 int main() {
-    Menu m = Menu();
-    FlightOption f = FlightOption(m);
+    FlightOption f = FlightOption();
+    Menu m = f.getMenu();
     int choice;
     bool filter_min_airlines = false;
     bool filter_airlines_list = false;
@@ -209,7 +204,7 @@ int main() {
                         string source;
                         cout << "Insert a source airport code/name:";
                         cin >> source;
-                        double lat, lon;
+                        float lat, lon;
                         cout << "Insert the latitude of the target airport:";
                         cin >> lat;
                         cout << '\n';
@@ -252,7 +247,7 @@ int main() {
                         string source;
                         cout << "Insert a source city:";
                         cin >> source;
-                        double lat, lon;
+                        float lat, lon;
                         cout << "Insert the latitude of the target airport:";
                         cin >> lat;
                         cout << "Insert the longitude of the target airport:";
@@ -264,7 +259,7 @@ int main() {
                         break;
                     }
                     case 7:{
-                        double lat, lon;
+                        float lat, lon;
                         cout << "Insert the latitude of the source airport:";
                         cin >> lat;
                         cout << "Insert the longitude of the source airport:";
@@ -279,7 +274,7 @@ int main() {
                         break;
                     }
                     case 8:{
-                        double lat, lon;
+                        float lat, lon;
                         cout << "Insert the latitude of the source airport:";
                         cin >> lat;
                         cout << "Insert the longitude of the source airport:";
@@ -299,7 +294,7 @@ int main() {
                         cin >> lat1;
                         cout << "Insert the longitude of the source airport:";
                         cin >> lon1;
-                        double lat2, lon2;
+                        float lat2, lon2;
                         cout << "Insert the latitude of the target airport:";
                         cin >> lat2;
                         cout << "Insert the longitude of the target airport:";

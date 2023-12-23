@@ -8,8 +8,11 @@ using namespace std;
 /**
  * FlightOption constructor - build a new menu
  */
-FlightOption::FlightOption(Menu m1) {
-    this->m = m1;
+FlightOption::FlightOption() {
+    this->m = Menu();
+}
+Menu FlightOption::getMenu(){
+    return this->m;
 }
 /**
  * available flights between two given airports with or without filters
@@ -152,7 +155,7 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
  * @param f2 use a specific set of airlines filter
  * @param f3 avoid a set of countries filter
  */
-void FlightOption::flight_airport_coordinates(std::string source, double lat, double longi, bool f1, bool f2, bool f3) {
+void FlightOption::flight_airport_coordinates(std::string source, float lat, float longi, bool f1, bool f2, bool f3) {
 
     vector<vector<Vertex<Airport>*>> res;
     if(f1){
@@ -387,7 +390,7 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
  * @param f2 use a specific set of airlines filter
  * @param f3 avoid a set of countries filter
  */
-void FlightOption::flight_city_coordinates(std::string source, double lat, double lon, bool f1, bool f2, bool f3) {
+void FlightOption::flight_city_coordinates(std::string source, float lat, float lon, bool f1, bool f2, bool f3) {
 
     vector<vector<Vertex<Airport>*>> res;
     if(f1){
@@ -472,7 +475,7 @@ void FlightOption::flight_city_coordinates(std::string source, double lat, doubl
  * @param f2 use a specific set of airlines filter
  * @param f3 avoid a set of countries filter
  */
-void FlightOption::flight_coordinates_airport(double lat, double lon, std::string target, bool f1, bool f2, bool f3) {
+void FlightOption::flight_coordinates_airport(float lat, float lon, std::string target, bool f1, bool f2, bool f3) {
     vector<vector<Vertex<Airport>*>> res;
     if(f1){
         for(string ap_code_s : m.findNearestAirports(lat, lon)) {
@@ -548,7 +551,7 @@ void FlightOption::flight_coordinates_airport(double lat, double lon, std::strin
  * @param f2 use a specific set of airlines filter
  * @param f3 avoid a set of countries filter
  */
-void FlightOption::flight_coordinates_city(double lat, double lon, std::string target, bool f1, bool f2, bool f3) {
+void FlightOption::flight_coordinates_city(float lat, float lon, std::string target, bool f1, bool f2, bool f3) {
     vector<vector<Vertex<Airport>*>> res;
     if(f1){
         for(string ap_code_s : m.findNearestAirports(lat, lon)) {
@@ -633,7 +636,7 @@ void FlightOption::flight_coordinates_city(double lat, double lon, std::string t
  * @param f2 use a specific set of airlines filter
  * @param f3 avoid a set of countries filter
  */
-void FlightOption::flight_coordinates_coordinates(double lat1, double lon1, double lat2, double lon2, bool f1, bool f2, bool f3) {
+void FlightOption::flight_coordinates_coordinates(float lat1, float lon1, float lat2, float lon2, bool f1, bool f2, bool f3) {
     vector<vector<Vertex<Airport>*>> res;
     if(f1) {
         for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {

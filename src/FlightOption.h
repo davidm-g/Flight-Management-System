@@ -5,9 +5,7 @@
 #ifndef GRAPHPROJECT_FLIGHTOPTION_H
 #define GRAPHPROJECT_FLIGHTOPTION_H
 
-#include "Data.h"
-#include "Airport.h"
-#include "Airline.h"
+
 #include "Menu.h"
 
 /**
@@ -21,16 +19,17 @@ class FlightOption {
 private:
     Menu m;
 public:
-    FlightOption(Menu m);
+    FlightOption();
+    Menu getMenu();
     void flight_airport_airport(string source, string target, bool f1, bool f2, bool f3);
     void flight_airport_city(string source, string target, bool f1, bool f2, bool f3);
-    void flight_airport_coordinates(string source, double lat, double longi, bool f1, bool f2, bool f3);
+    void flight_airport_coordinates(string source, float lat, float longi, bool f1, bool f2, bool f3);
     void flight_city_airport(string source, string target, bool f1, bool f2, bool f3);
     void flight_city_city(string source, string target, bool f1, bool f2, bool f3);
-    void flight_city_coordinates(string source, double lat, double lon, bool f1, bool f2, bool f3);
-    void flight_coordinates_airport(double lat, double lon,string target, bool f1, bool f2, bool f3);
-    void flight_coordinates_city(double lat, double lon,string target, bool f1, bool f2, bool f3);
-    void flight_coordinates_coordinates(double lat1, double lon1, double lat2, double lon2, bool f1, bool f2, bool f3);
+    void flight_city_coordinates(string source, float lat, float lon, bool f1, bool f2, bool f3);
+    void flight_coordinates_airport(float lat, float lon,string target, bool f1, bool f2, bool f3);
+    void flight_coordinates_city(float lat, float lon,string target, bool f1, bool f2, bool f3);
+    void flight_coordinates_coordinates(float lat1, float lon1, float lat2, float lon2, bool f1, bool f2, bool f3);
 
 };
 
