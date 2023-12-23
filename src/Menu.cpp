@@ -19,7 +19,7 @@ Menu::Menu() {
 }
 
 /**
- * function that retrieves total nr of airports
+ * function that retrieves total nr of airports - complexity O(1)
  * @return nr of airports
  */
 int Menu::totalAirports(){
@@ -27,7 +27,7 @@ int Menu::totalAirports(){
 }
 
 /**
- * function that retrieves total nr of flights
+ * function that retrieves total nr of flights - complexity O(V) where V is the number of vertices in the graph
  * @return nr of flights
  */
 int Menu::totalFlights(){
@@ -39,38 +39,17 @@ int Menu::totalFlights(){
 }
 
 /**
- * countries flyable from a given city
+ * countries flyable from a given city - complexity O(V * E * log M) where V is the number of vertices, E is the average number of edges per vertex within the specified city, and M is the number of unique countries encountered in these edges.
  * @param city that we fly from
  * @return nr of countries that the city flies to
  */
  int Menu::num_countries_city(std::string city){
     int count=0;
     set<string> used_countries;
-     for(auto v : d.getAP().getVertexSet()){
-         if(v->getInfo().getCity() == city){
-                for(auto edge:v->getAdj()){
-                        if(used_countries.find(edge.getDest()->getInfo().getCountry())== used_countries.end()){
-                            count++;
-                            used_countries.insert(edge.getDest()->getInfo().getCountry());
-                        }
-                }
-         }
-     }
-         return count;
-}
-
-/**
- * countries flyable from a given airport
- * @param acode of the airport that we fly from
- * @return nr of countries that the airport flies to
- */
-int Menu::num_countries_airport(std::string acode) {
-    int count=0;
-    set<string> used_countries;
     for(auto v : d.getAP().getVertexSet()){
-        if(v->getInfo().getCode() == acode){
+        if(v->getInfo().getCity() == city){
             for(auto edge:v->getAdj()){
-                if(used_countries.find(edge.getDest()->getInfo().getCountry()) == used_countries.end()){
+                if(used_countries.find(edge.getDest()->getInfo().getCountry())== used_countries.end()){
                     count++;
                     used_countries.insert(edge.getDest()->getInfo().getCountry());
                 }
@@ -80,9 +59,28 @@ int Menu::num_countries_airport(std::string acode) {
     return count;
 }
 
+/**
+ * countries flyable from a given airport - complexity O(E * log M) where E is the number of adjacent edges for the specified airport and M is the number of unique countries encountered in these edges.
+ * @param acode of the airport that we fly from
+ * @return nr of countries that the airport flies to
+ */
+int Menu::num_countries_airport(std::string acode) {
+    int count=0;
+    set<string> used_countries;
+    for(auto edge:d.getAirports()[acode]->getAdj()){
+        if(used_countries.find(edge.getDest()->getInfo().getCountry()) == used_countries.end()){
+            count++;
+            used_countries.insert(edge.getDest()->getInfo().getCountry());
+        }
+    }
+
+
+    return count;
+}
+
 
 /**
- * nr of flights and different airlines from a given airport
+ * nr of flights and different airlines from a given airport - complexity O(E * log N) where E is the number of adjacent edges for the specified airport code and N is the number of unique airlines encountered in these edges.
  * @param apcode of the source airport
  * @return pair of number of flights and airlines used
  */
@@ -91,22 +89,19 @@ pair<int, int> Menu::numFlightsAirlines(string apcode){
     Graph<Airport> grafo=d.getAP();
     int n_voos = 0;
     int n_airlines=0;
-    for(auto v : grafo.getVertexSet()){
-        if(v->getInfo().getCode() == apcode) {
-            n_voos += v->getAdj().size();
-            for (auto edge: v->getAdj()) {
-                if (used_airlines.find(edge.getAirlinecode()) == used_airlines.end()) {
-                    n_airlines++;
-                    used_airlines.insert(edge.getAirlinecode());
-                }
-            }
-            break;
+
+    n_voos += d.getAirports()[apcode]->getAdj().size();
+    for (auto edge: d.getAirports()[apcode]->getAdj()) {
+        if (used_airlines.find(edge.getAirlinecode()) == used_airlines.end()) {
+            n_airlines++;
+            used_airlines.insert(edge.getAirlinecode());
         }
     }
+
     return make_pair(n_voos, n_airlines);
 }
 /**
- * retrieves the amount of flights that a city receives and release
+ * retrieves the amount of flights that a city receives and release - complexity O(V) where V is the number of vertices in the graph
  * @param name of the desired city
  * @return the number of in and out flights in a determined city.
  */
@@ -120,7 +115,7 @@ int Menu::num_flights_city(string name){
     return count;
 }
 /**
- * retrieves the amount of flights that an airline does
+ * retrieves the amount of flights that an airline does - complexity O(V * E) where V is the number of vertices and E the number of edges in the graph
  * @param acode of the airline
  * @return the number of in and out flights in a determined airline.
  */
@@ -135,7 +130,7 @@ int Menu::num_flights_airlines(std::string acode) {
 }
 
 /**
- * Reachable destinations with x stops
+ * Reachable destinations with x stops - complexity O(V + E) where V is the number of vertices and E the number of edges in the graph
  * @param acode
  * @param max_stops
  */
@@ -175,7 +170,7 @@ void Menu::bfs_Stops(std::string acode, int max_stops) {
 }
 
 /**
- * Nr of destinations from airport
+ * Nr of destinations from airport - complexity O(V + E) where V is the number of vertices and E the number of edges in the graph
  * @param acode of the starting airport
  */
 void Menu::dfs_Des(string acode){
@@ -219,7 +214,7 @@ void Menu::dfs_Visit_Des(Vertex<Airport> * v , unordered_set<string>& countries,
 }
 
 /**
- * calculates the flight trip(s) with the greatest number of stops
+ * calculates the flight trip(s) with the greatest number of stops - complexity O(V * (V + E)) where V is the number of vertices and E the number of edges in the graph
  * @return The maximum number of stops between two airports and the airports
  */
 vector<pair<int, pair<Airport,Airport> >> Menu::graph_diameter() {
@@ -256,7 +251,7 @@ vector<pair<int, pair<Airport,Airport> >> Menu::graph_diameter() {
 
 }
 /**
- * retrieves the top k airports by air traffic
+ * retrieves the top k airports by air traffic - complexity O(V * log V) where V is the number of vertices in the graph
  * @param k
  * @return vector of pairs, first is air traffic count and second is the airport
  */
@@ -276,15 +271,18 @@ vector<pair<int,Airport>> Menu::greatest_air_traffic(int k){
 
 }
 /**
- * Delivers the airports that are essential to networks circulation capability
+ * Delivers the airports that are essential to networks circulation capability - complexity O(V + E) where V is the number of vertices and E the number of edges in the graph
  * @return a set of articulation points
  */
-set<Airport>Menu::Articu_points(){
+unordered_set<Vertex<Airport>*>Menu::Articu_points(){
     stack<Airport> S;
-    set<Airport> res;
+    unordered_set<Vertex<Airport>*> res;
     int index = 1;
     for(auto v : d.getAP().getVertexSet()){
         v->setVisited(false);
+        v->setProcessing(false);
+        v->setNum(0);
+        v->setLow(0);
     }
     for(auto v : d.getAP().getVertexSet()){
         if(!v->isVisited()){
@@ -294,10 +292,15 @@ set<Airport>Menu::Articu_points(){
 
     return res;
 }
+
 /**
- * auxiliary function for Articu_points
+ *
+ * @param v
+ * @param s
+ * @param res
+ * @param i
  */
-void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, int& i) {
+void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, unordered_set<Vertex<Airport>*>& res, int& i) {
     v->setVisited(true);
     v->setLow(i);
     v->setNum(i);
@@ -310,78 +313,19 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, in
             children++;
             dfs_arti(e.getDest(), s, res, i);
             v->setLow(min(v->getLow(), e.getDest()->getLow()));
-            if ((v->getNum() == 1 && children > 1) || (v->getNum() != 1 && e.getDest()->getLow() >= v->getNum()))
-                res.insert(v->getInfo());
+            if ((v->getNum() != 1 && e.getDest()->getLow() >= v->getNum()) || (children > 1 && v->getNum() == 1))
+                res.insert(v);
+
         } else if (e.getDest()->isProcessing()) {
             v->setLow(min(v->getLow(), e.getDest()->getNum()));
         }
     }
+    s.pop();
     v->setProcessing(false);
 }
+
 /**
- * function that returns the shortest path between two destinations
- * @param source the code of source airport
- * @param target the code of target airport
- * @return the best flight options between two airports in a vector of vectors of airports
- */
-vector<vector<Airport>> Menu::shortest_paths(string source, string target) {
-    queue<std::vector<Airport>> queue;
-    set<Airport> visited;
-    vector<std::vector<Airport>> paths; // todos os caminhos possiveis
-    vector<std::vector<Airport>> res;  //caminhos mais curtos
-    vector<Airport> path;
-    vector<Airport> new_path;
-    int m = INT_MAX;
-    if (d.getAirports().find(source) == d.getAirports().end()) {
-        for(auto v : d.getAP().getVertexSet()){
-            if(v->getInfo().getName() == source){
-                source = v->getInfo().getCode();
-                break;
-            }
-        }
-    }
-    if (d.getAirports().find(target) == d.getAirports().end()) {
-        for(auto v : d.getAP().getVertexSet()){
-            if(v->getInfo().getName() == target){
-                target = v->getInfo().getCode();
-                break;
-            }
-        }
-    }
-    queue.push({d.getAirports()[source]->getInfo()});
-    Airport current_node;
-    while (!queue.empty()) {
-        path = queue.front();
-        current_node = path.back();
-        queue.pop();
-
-        if (current_node.getCode() == target) {
-            if(find(paths.begin(), paths.end(), path) == paths.end())
-                paths.push_back(path);
-        }
-
-        if (visited.find(current_node) == visited.end()) {
-            visited.insert(current_node);
-            for (auto e : d.getAirports()[current_node.getCode()]->getAdj()) {
-                if (visited.find(e.getDest()->getInfo()) == visited.end()) {
-                    new_path = path;
-                    new_path.push_back(e.getDest()->getInfo());
-                    queue.push(new_path);
-                }
-            }
-        }
-    }
-    for(auto v : paths){
-        if(v.size() <= m) m = v.size();
-    }
-    for(auto v : paths){
-        if(v.size() == m) res.push_back(v);
-    }
-
-    return res;
-}
-/**
- * Very similar to shortest_paths, the difference is in the return type
+ * function that returns the shortest path between two destinations - complexity O(V + E + P) where V is the number of vertices, E is the number of edges, and P is the number of paths found between the source and target nodes.
  * @param source the code of source airport
  * @param target the code of target airport
  * @return the best flight options between two airports in a vector of vectors of vertexes of airports
@@ -443,7 +387,7 @@ vector<vector<Vertex<Airport>*>> Menu::shortest_paths2(string source, string tar
     return res;
 }
 /**
- * function to know the airports in a determined city
+ * function to know the airports in a determined city - complexity O(V) where V is the number of vertices in the graph
  * @param city the name of the city
  * @return vector of airport codes that are established on a given city
  */
@@ -456,7 +400,7 @@ vector<string> Menu::city_airports(string city){
     return res;
 }
 /**
- * function to know the distance between two airports, by using its coordinates
+ * function to know the distance between two airports, by using its coordinates - complexity O(1)
  * @param lat1 latitude of 1st airport
  * @param lon1 longitude of 1st airport
  * @param lat2 latitude of second airport
@@ -486,7 +430,7 @@ static double haversine(double lat1, double lon1,
     return rad * c;
 }
 /**
- * function that finds the nearest Airport(s) based on the given latitude and longitude
+ * function that finds the nearest Airport(s) based on the given latitude and longitude - complexity O(V) where V is the number of vertices in the graph
  * @param lat given latitude
  * @param lon given longitude
  * @return a vector of airport codes that are the nearest to the given coordinates
@@ -509,7 +453,7 @@ vector<string> Menu::findNearestAirports(double lat, double lon) {
 }
 
 /**
- * function based on shortest_paths, except using a filter that turns the best flight
+ * function based on shortest_paths, except using a filter that turns the best flight - complexity O(P * N * E * log P) where V is the number of vertices, E is the number of edges, and P is the number of paths found between the source and target nodes.
  * option into the path that uses the minimum number of different airlines,
  * @param start code of source airport
  * @param target code of target airport
@@ -543,10 +487,15 @@ vector<vector<Vertex<Airport>*>> Menu::f1_shortest_paths(string source, string t
     }
     return res1;
 
-
-
 }
-
+/**
+ * function based on shortest_paths, except using a filter that turns the best flight - complexity O(V + E + P) where V is the number of vertices, E is the number of edges, and P is the number of paths found between the source and target nodes.
+ * option into the path that uses the given pretended airlines
+ * @param start code of source airport
+ * @param target code of target airport
+ * @param air set of wanted airline codes
+ * @return best flight options, based on the filter
+ */
 
 vector<vector<Vertex<Airport>*>> Menu::f2_shortest_paths(string source, string target, set<string> air){
 
@@ -606,6 +555,14 @@ vector<vector<Vertex<Airport>*>> Menu::f2_shortest_paths(string source, string t
     return res;
 
 }
+/**
+ * function based on shortest_paths, except using a filter that turns the best flight - complexity O(V + E + P) where V is the number of vertices, E is the number of edges, and P is the number of paths found between the source and target nodes.
+ * option into the path that avoids the given countries
+ * @param start code of source airport
+ * @param target code of target airport
+ * @param countries set of countries to avoid
+ * @return best flight options, based on the filter
+ */
 vector<vector<Vertex<Airport>*>> Menu::f3_shortest_paths(string source, string target, set<string> countries) {
 
     queue<std::vector<Vertex<Airport> *>> queue;
@@ -666,3 +623,4 @@ vector<vector<Vertex<Airport>*>> Menu::f3_shortest_paths(string source, string t
 
 
 }
+

@@ -34,8 +34,8 @@ public:
     void dfs_Visit_Des(Vertex<Airport> * v , unordered_set<string>& countries,unordered_set<string>& cities, int& n_airports);
     vector<pair<int,pair<Airport,Airport>>>graph_diameter();
     vector<pair<int,Airport>> greatest_air_traffic(int k);
-    set<Airport> Articu_points();
-    void dfs_arti(Vertex<Airport>* v, stack<Airport>& s, set<Airport>& res, int& i);
+    unordered_set<Vertex<Airport>*> Articu_points();
+    void dfs_arti(Vertex<Airport>* v, stack<Airport>& s, unordered_set<Vertex<Airport>*>& res, int& i);
     vector<vector<Airport>> shortest_distance_airports(string source, string target);
     vector<string> findNearestAirports(double lat, double lon);
     vector<std::vector<Airport>> shortest_paths(string start,string end);
@@ -46,6 +46,7 @@ public:
     int countAirlineChanges(vector<Vertex<Airport>*> path);
     vector<vector<Vertex<Airport>*>> f2_shortest_paths(string start, string target, set<string> air);
     vector<vector<Vertex<Airport>*>> f3_shortest_paths(string start, string target, set<string> countries);
+
 
 };
 

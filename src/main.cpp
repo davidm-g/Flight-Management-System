@@ -61,19 +61,19 @@ int main() {
             case 4:{
                 cout<<"1. Number of flights per city"<<endl;
                 cout<<"2. Number of flights per airline"<<endl;
-                cout << "Please enter your desired choice: ";
+                cout << "Please enter your desired choice:";
                 int escolha;
                 cin>>escolha;
                 switch (escolha) {
                     case 1:{
-                        cout<<"Enter the desired city: ";
+                        cout<<"Enter the desired city:";
                         string city;
                         cin>>city;
-                        cout << "The number of in and out flights in " << city << " is : " << m.num_flights_city(city) << '\n' << '\n';
+                        cout << "The number of in and out flights from/to " << city << " is : " << m.num_flights_city(city) << '\n' << '\n';
                         break;
                     }
                     case 2:{
-                        cout << "Enter the desired airline code: ";
+                        cout << "Enter the desired airline code:";
                         string acode;
                         cin >> acode;
                         cout << "The airline " << acode <<" operates in total : " << m.num_flights_airlines(acode) << " flights\n" << '\n';
@@ -87,22 +87,22 @@ int main() {
                 break;
             }
             case 5: {
-                cout<<"1. Number of different countries that a given city fligths to: "<<endl;
-                cout<<"2. Number of different countries that a given airport flights to: "<<endl;
+                cout<<"1. Number of different countries that a given city fligths to"<<endl;
+                cout<<"2. Number of different countries that a given airport flights to"<<endl;
                 cout << "Please enter your desired choice:";
                 int escolha;
                 cin >> escolha;
                 cin.ignore(); // ignore the newline character that remained
                 switch (escolha) {
                     case 1:{
-                        cout << "Enter the desired city: ";
+                        cout << "Enter the desired city:";
                         string city;
                         getline(cin,city);
                         cout << "The city of " << city << " flies to "  << m.num_countries_city(city) << " different countries\n";
                         break;
                     }
                     case 2:{
-                        cout << "Enter the desired airport code: ";
+                        cout << "Enter the desired airport code:";
                         string acode;
                         cin >> acode;
                         cout << "The airport " << acode << " flies to "  << m.num_countries_airport(acode) << " different countries\n";
@@ -154,7 +154,7 @@ int main() {
             case 10:  {
                 cout << "The airports that are essential to networks circulation capability are:\n";
                 for(auto ap : m.Articu_points()){
-                    cout << ap.getName() << " located in " << ap.getCity() << ", " << ap.getCountry() << ".\n";
+                    cout << ap->getInfo().getName() << " located in " << ap->getInfo().getCity() << ", " << ap->getInfo().getCountry() << ".\n";
                 }
                 cout << '\n';
                 cout << "There are in total " << m.Articu_points().size() << " essential airports\n";
@@ -180,10 +180,10 @@ int main() {
                 switch (so) {
                     case 1:{
 
-                        cout << "Insert a source airport code/name: ";
+                        cout << "Insert a source airport code/name:";
                         string source;
                         getline(cin,source);
-                        cout << "Insert a target airport code/name: ";
+                        cout << "Insert a target airport code/name:";
                         string target;
                         getline(cin,target);
                         cout << '\n';
@@ -237,14 +237,14 @@ int main() {
                     }
 
                     case 2:{
-                        cout << "Insert a source airport code/name: ";
+                        cout << "Insert a source airport code/name:";
                         string source;
                         getline(cin,source);
-                        cout << "Insert a target city: ";
+                        cout << "Insert a target city:";
                         string target;
                         getline(cin,target);
                         cout << '\n';
-                        cout << "The best flight options between that airport and that city are: " << '\n';
+                        cout << "The best flight options between that airport and that city are:" << '\n';
                         vector<vector<Vertex<Airport>*>> res;
                         if(filter_min_airlines){
                             for(string airport_code : m.city_airports(target)) {
@@ -316,16 +316,16 @@ int main() {
 
                     case 3: {
                         string source;
-                        cout << "Insert a source airport code/name: ";
+                        cout << "Insert a source airport code/name:";
                         cin >> source;
                         double lat, lon;
-                        cout << "Insert the latitude of the target airport: ";
+                        cout << "Insert the latitude of the target airport:";
                         cin >> lat;
                         cout << '\n';
-                        cout << "Insert the longitude of the target airport: ";
+                        cout << "Insert the longitude of the target airport:";
                         cin >> lon;
                         cout << '\n';
-                        cout << "The best flight options between those two cities are: " << '\n';
+                        cout << "The best flight options between those two cities are:" << '\n';
                         vector<vector<Vertex<Airport>*>> res;
                         if(filter_min_airlines){
                             for(string airport_code : m.findNearestAirports(lat, lon)) {
@@ -394,14 +394,14 @@ int main() {
                         break;
                     }
                     case 4:{
-                        cout << "Insert a source city: ";
+                        cout << "Insert a source city:";
                         string source;
                         getline(cin,source);
-                        cout << "Insert a target airport code/name: ";
+                        cout << "Insert a target airport code/name:";
                         string target;
                         getline(cin,target);
                         cout << '\n';
-                        cout << "The best flight options between that city and that airport are: " << '\n';
+                        cout << "The best flight options between that city and that airport are:" << '\n';
                         vector<vector<Vertex<Airport>*>> res;
                         if(filter_min_airlines){
                             for(string airport_code : m.city_airports(source)) {
@@ -470,14 +470,14 @@ int main() {
                         break;
                     }
                     case 5: {
-                        cout << "Insert a source city: ";
+                        cout << "Insert a source city:";
                         string source;
                         getline(cin, source);
-                        cout << "Insert a target city: ";
+                        cout << "Insert a target city:";
                         string target;
                         getline(cin, target);
                         cout << '\n';
-                        cout << "The best flight options between those two cities are: " << '\n';
+                        cout << "The best flight options between those two cities are:" << '\n';
                         vector<vector<Vertex<Airport>*>> res;
                         if(filter_min_airlines){
                             for (string airport_code: m.city_airports(source)) {
@@ -555,15 +555,15 @@ int main() {
                     }
                     case 6: {
                         string source;
-                        cout << "Insert a source city: ";
+                        cout << "Insert a source city:";
                         cin >> source;
                         double lat, lon;
-                        cout << "Insert the latitude of the target airport: ";
+                        cout << "Insert the latitude of the target airport:";
                         cin >> lat;
-                        cout << "Insert the longitude of the target airport: ";
+                        cout << "Insert the longitude of the target airport:";
                         cin >> lon;
                         cout << '\n';
-                        cout << "The best flight options between those two cities are: " << '\n';
+                        cout << "The best flight options between those two cities are:" << '\n';
                         vector<vector<Vertex<Airport>*>> res;
                         if(filter_min_airlines){
                             for(string ap_code_s : m.city_airports(source)) {
@@ -641,15 +641,15 @@ int main() {
                     }
                     case 7:{
                         double lat, lon;
-                        cout << "Insert the latitude of the source airport: ";
+                        cout << "Insert the latitude of the source airport:";
                         cin >> lat;
-                        cout << "Insert the longitude of the source airport: ";
+                        cout << "Insert the longitude of the source airport:";
                         cin >> lon;
                         string target;
-                        cout << "Insert a target airport code/name: ";
+                        cout << "Insert a target airport code/name:";
                         cin >> target;
                         cout << '\n';
-                        cout << "The best flight options between those two cities are: " << '\n';
+                        cout << "The best flight options between those two cities are:" << '\n';
                         vector<vector<Vertex<Airport>*>> res;
                         if(filter_min_airlines){
                             for(string ap_code_s : m.findNearestAirports(lat, lon)) {
@@ -719,15 +719,15 @@ int main() {
                     }
                     case 8:{
                         double lat, lon;
-                        cout << "Insert the latitude of the source airport: ";
+                        cout << "Insert the latitude of the source airport:";
                         cin >> lat;
-                        cout << "Insert the longitude of the source airport: ";
+                        cout << "Insert the longitude of the source airport:";
                         cin >> lon;
                         string target;
-                        cout << "Insert a target city: ";
+                        cout << "Insert a target city:";
                         cin >> target;
                         cout << '\n';
-                        cout << "The best flight options between those two cities are: " << '\n';
+                        cout << "The best flight options between those two cities are:" << '\n';
                         vector<vector<Vertex<Airport>*>> res;
                         if(filter_min_airlines){
                             for(string ap_code_s : m.findNearestAirports(lat, lon)) {
@@ -805,17 +805,17 @@ int main() {
                     }
                     case 9:{
                         double lat1, lon1;
-                        cout << "Insert the latitude of the source airport: ";
+                        cout << "Insert the latitude of the source airport:";
                         cin >> lat1;
-                        cout << "Insert the longitude of the source airport: ";
+                        cout << "Insert the longitude of the source airport:";
                         cin >> lon1;
                         double lat2, lon2;
-                        cout << "Insert the latitude of the target airport: ";
+                        cout << "Insert the latitude of the target airport:";
                         cin >> lat2;
-                        cout << "Insert the longitude of the target airport: ";
+                        cout << "Insert the longitude of the target airport:";
                         cin >> lon2;
                         cout << '\n';
-                        cout << "The best flight options between those two cities are: " << '\n';
+                        cout << "The best flight options between those two cities are:" << '\n';
                         vector<vector<Vertex<Airport>*>> res;
                         if(filter_min_airlines) {
                             for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {

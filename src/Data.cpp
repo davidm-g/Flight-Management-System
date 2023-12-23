@@ -13,6 +13,10 @@ unordered_map<string, Airline> Data::getAirlines() {
 unordered_map<string, Vertex<Airport>* > Data::getAirports() {
     return airports;
 }
+unordered_multimap<string, Vertex<Airport>*> Data::getAirportsByCity(){
+    return airports_by_city;
+}
+
 
 void Data::parse_airports() {
     ifstream apfile("airports.csv");
@@ -32,9 +36,10 @@ void Data::parse_airports() {
         float lat = stof(latitude);
         float lon = stof(longitude);
         Airport aero = Airport(code,name,city,country,lat,lon);
-        Vertex<Airport>* aero_vertex=  new Vertex<Airport>(aero);
+        Vertex<Airport>* aero_vertex =  new Vertex<Airport>(aero);
         ap.addVertex(  aero_vertex);
         airports[code]=aero_vertex;
+        airports[city] = aero_vertex;
     }
 
 }
