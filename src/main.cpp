@@ -6,9 +6,11 @@
 #include "Airline.h"
 #include "graph.h"
 #include "Menu.h"
+#include "FlightOption.h"
 using namespace std;
 int main() {
     Menu m = Menu();
+    FlightOption f = FlightOption(m);
     int choice;
     bool filter_min_airlines = false;
     bool filter_airlines_list = false;
@@ -39,7 +41,6 @@ int main() {
                       << "The program will stop.";
             break;
         }
-
         switch (choice) {
             case 1: {
                 cout << "The total number of airports is " << m.totalAirports() << '\n';
@@ -53,9 +54,7 @@ int main() {
                 string acode;
                 cout << "Type in the wanted airport code:";
                 cin >> acode;
-                pair<int, int> p = m.numFlightsAirlines(acode);
-                cout << p.first << " flights out of " << acode << " airport from "
-                    << p.second << " different airlines." << '\n';
+                m.numFlightsAirlines(acode);
                 break;
             }
             case 4:{
@@ -173,7 +172,7 @@ int main() {
                 cout << "|8. Best flight coordinates --> city        |" << '\n';
                 cout << "|9. Best flight coordinates --> coordinates |" << '\n';
                 cout << "|___________________________________________|" << '\n';
-                cout << "Please select your desired method: ";
+                cout << "Please select your desired method:";
                 int so;
                 cin >> so;
                 cin.ignore();
@@ -188,51 +187,7 @@ int main() {
                         getline(cin,target);
                         cout << '\n';
                         cout << "The best flight options between those two airports are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> temp;
-
-                        if(filter_min_airlines) {
-                            temp = m.f1_shortest_paths(source, target);
-
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airline codes followed by a ',':";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            temp = m.f2_shortest_paths(source,target,air);
-
-                        }
-                        else if (filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            temp = m.f3_shortest_paths(source,target,countries);
-
-                        }
-                        else {
-                            temp = m.shortest_paths2(source,target);
-                        }
-                        for (auto v: temp) {
-                            for (int i = 0; i < v.size() - 1; i++) {
-                                cout << v[i]->getInfo().getName() << " --> ";
-                            }
-                            cout << v[(v.size() - 1)]->getInfo().getName();
-                            cout << "\n";
-                        }
-
+                        f.flight_airport_airport(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         break;
                     }
 
@@ -245,71 +200,7 @@ int main() {
                         getline(cin,target);
                         cout << '\n';
                         cout << "The best flight options between that airport and that city are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> res;
-                        if(filter_min_airlines){
-                            for(string airport_code : m.city_airports(target)) {
-                                for (auto v: m.f1_shortest_paths(source, airport_code)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airlines code:";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            for(string airport_code : m.city_airports(target)) {
-                                for (auto v: m.f2_shortest_paths(source, airport_code,air)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else if(filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            for(string airport_code : m.city_airports(target)) {
-                                for (auto v: m.f3_shortest_paths(source, airport_code,countries)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else {
-                            for(string airport_code : m.city_airports(target)) {
-                                for (auto v: m.shortest_paths2(source, airport_code)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-
-                        int min=INT_MAX;
-                        for(auto path: res) {
-                            if (path.size() <= min) {
-                                min = path.size();
-                            }
-                        }
-                        for(auto path : res){
-                            if(path.size()==min){
-                                for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << path[(path.size() - 1)]->getInfo().getName();
-                                cout << "\n";
-                            }
-                        }
+                        f.flight_airport_city(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //airport ---> city
                         break;
                     }
@@ -326,70 +217,8 @@ int main() {
                         cin >> lon;
                         cout << '\n';
                         cout << "The best flight options between those two cities are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> res;
-                        if(filter_min_airlines){
-                            for(string airport_code : m.findNearestAirports(lat, lon)) {
-                                for (auto v: m.f1_shortest_paths(source, airport_code)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airlines code:";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            for(string airport_code : m.findNearestAirports(lat, lon)) {
-                                for (auto v: m.f2_shortest_paths(source, airport_code, air)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else if(filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            for(string airport_code : m.findNearestAirports(lat, lon)) {
-                                for (auto v: m.f3_shortest_paths(source, airport_code, countries)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else {
-                            for(string airport_code : m.findNearestAirports(lat, lon)) {
-                                for (auto v: m.shortest_paths2(source, airport_code)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        int min=INT_MAX;
-                        for(auto path: res) {
-                            if (path.size() <= min) {
-                                min = path.size();
-                            }
-                        }
-                        for(auto path : res){
-                            if(path.size()==min){
-                                for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << path[(path.size() - 1)]->getInfo().getName();
-                                cout << "\n";
-                            }
-                        }
+                        f.flight_airport_coordinates(source,lat,lon,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
+
                         //airport ---> coordinates
                         break;
                     }
@@ -402,70 +231,7 @@ int main() {
                         getline(cin,target);
                         cout << '\n';
                         cout << "The best flight options between that city and that airport are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> res;
-                        if(filter_min_airlines){
-                            for(string airport_code : m.city_airports(source)) {
-                                for (auto v: m.f1_shortest_paths(airport_code, target)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airlines code:";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            for(string airport_code : m.city_airports(source)) {
-                                for (auto v: m.f2_shortest_paths(airport_code, target, air)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else if(filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            for(string airport_code : m.city_airports(source)) {
-                                for (auto v: m.f3_shortest_paths(airport_code, target, countries)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else {
-                            for(string airport_code : m.city_airports(source)) {
-                                for (auto v: m.shortest_paths2(airport_code, target)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        int min=INT_MAX;
-                        for(auto path: res) {
-                            if (path.size() <= min) {
-                                min = path.size();
-                            }
-                        }
-                        for(auto path : res){
-                            if(path.size()==min){
-                                for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << path[(path.size() - 1)]->getInfo().getName();
-                                cout << "\n";
-                            }
-                        }
+                        f.flight_city_airport(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //city ---> airport
                         break;
                     }
@@ -478,78 +244,7 @@ int main() {
                         getline(cin, target);
                         cout << '\n';
                         cout << "The best flight options between those two cities are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> res;
-                        if(filter_min_airlines){
-                            for (string airport_code: m.city_airports(source)) {
-                                for (string t: m.city_airports(target)) {
-                                    for (auto v: m.f1_shortest_paths(airport_code, t)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airlines code:";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            for (string airport_code: m.city_airports(source)) {
-                                for (string t: m.city_airports(target)) {
-                                    for (auto v: m.f2_shortest_paths(airport_code, t, air)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else if(filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            for (string airport_code: m.city_airports(source)) {
-                                for (string t: m.city_airports(target)) {
-                                    for (auto v: m.f3_shortest_paths(airport_code, t, countries)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            for (string airport_code: m.city_airports(source)) {
-                                for (string t: m.city_airports(target)) {
-                                    for (auto v: m.shortest_paths2(airport_code, t)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        int min = INT_MAX;
-                        for (auto path: res) {
-                            if (path.size() <= min) {
-                                min = path.size();
-                            }
-                        }
-                        for (auto path: res) {
-                            if (path.size() == min) {
-                                for (int i = 0; i < path.size() - 1; i++) {
-                                    cout << path[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << path[(path.size() - 1)]->getInfo().getName();
-                                cout << "\n";
-                            }
-                        }
+                        f.flight_city_city(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //city ---> city
                         break;
                     }
@@ -564,78 +259,7 @@ int main() {
                         cin >> lon;
                         cout << '\n';
                         cout << "The best flight options between those two cities are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> res;
-                        if(filter_min_airlines){
-                            for(string ap_code_s : m.city_airports(source)) {
-                                for (string ap_code_t: m.findNearestAirports(lat, lon)) {
-                                    for (auto v: m.f1_shortest_paths(ap_code_s, ap_code_t)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airlines code:";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            for(string ap_code_s : m.city_airports(source)) {
-                                for (string ap_code_t: m.findNearestAirports(lat, lon)) {
-                                    for (auto v: m.f2_shortest_paths(ap_code_s, ap_code_t, air)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else if(filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            for(string ap_code_s : m.city_airports(source)) {
-                                for (string ap_code_t: m.findNearestAirports(lat, lon)) {
-                                    for (auto v: m.f3_shortest_paths(ap_code_s, ap_code_t, countries)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            for(string ap_code_s : m.city_airports(source)) {
-                                for (string ap_code_t: m.findNearestAirports(lat, lon)) {
-                                    for (auto v: m.shortest_paths2(ap_code_s, ap_code_t)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        int min=INT_MAX;
-                        for(auto path: res) {
-                            if (path.size() <= min) {
-                                min = path.size();
-                            }
-                        }
-                        for(auto path : res){
-                            if(path.size()==min){
-                                for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << path[(path.size() - 1)]->getInfo().getName();
-                                cout << "\n";
-                            }
-                        }
+                        f.flight_city_coordinates(source,lat,lon,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //city ---> coordinates
                         break;
                     }
@@ -650,70 +274,7 @@ int main() {
                         cin >> target;
                         cout << '\n';
                         cout << "The best flight options between those two cities are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> res;
-                        if(filter_min_airlines){
-                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                                for (auto v: m.f1_shortest_paths(ap_code_s, target)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airlines code:";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                                for (auto v: m.f2_shortest_paths(ap_code_s, target, air)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else if(filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                                for (auto v: m.f3_shortest_paths(ap_code_s, target, countries)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        else {
-                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                                for (auto v: m.shortest_paths2(ap_code_s, target)) {
-                                    res.push_back(v);
-                                }
-                            }
-                        }
-                        int min=INT_MAX;
-                        for(auto path: res) {
-                            if (path.size() <= min) {
-                                min = path.size();
-                            }
-                        }
-                        for(auto path : res){
-                            if(path.size()==min){
-                                for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << path[(path.size() - 1)]->getInfo().getName();
-                                cout << "\n";
-                            }
-                        }
+                        f.flight_coordinates_airport(lat,lon,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //coordinates ---> airport
                         break;
                     }
@@ -728,78 +289,7 @@ int main() {
                         cin >> target;
                         cout << '\n';
                         cout << "The best flight options between those two cities are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> res;
-                        if(filter_min_airlines){
-                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                                for (string ap_code_t: m.city_airports(target)) {
-                                    for (auto v: m.f1_shortest_paths(ap_code_s, ap_code_t)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airlines code:";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                                for (string ap_code_t: m.city_airports(target)) {
-                                    for (auto v: m.f2_shortest_paths(ap_code_s, ap_code_t, air)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else if(filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                                for (string ap_code_t: m.city_airports(target)) {
-                                    for (auto v: m.f3_shortest_paths(ap_code_s, ap_code_t, countries)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-                                for (string ap_code_t: m.city_airports(target)) {
-                                    for (auto v: m.shortest_paths2(ap_code_s, ap_code_t)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        int min=INT_MAX;
-                        for(auto path: res) {
-                            if (path.size() <= min) {
-                                min = path.size();
-                            }
-                        }
-                        for(auto path : res){
-                            if(path.size()==min){
-                                for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << path[(path.size() - 1)]->getInfo().getName();
-                                cout << "\n";
-                            }
-                        }
+                        f.flight_coordinates_city(lat,lon,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //coordinates ---> city
                         break;
                     }
@@ -816,78 +306,7 @@ int main() {
                         cin >> lon2;
                         cout << '\n';
                         cout << "The best flight options between those two cities are:" << '\n';
-                        vector<vector<Vertex<Airport>*>> res;
-                        if(filter_min_airlines) {
-                            for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {
-                                for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
-                                    for (auto v: m.f1_shortest_paths(ap_code_s, ap_code_t)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else if(filter_airlines_list){
-                            set<string> air;
-                            string acode;
-                            cout << "Please insert the preferred airlines code:";
-                            string line;
-                            getline(cin, line);
-                            air.insert(acode);
-                            istringstream iss(line);
-                            while(getline(iss, acode, ',')) {
-                                air.insert(acode);
-                            }
-                            for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {
-                                for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
-                                    for (auto v: m.f2_shortest_paths(ap_code_s, ap_code_t,air)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else if(filter_avoid_countries){
-                            set<string> countries;
-                            string country;
-                            cout << "Please insert the countries to avoid:";
-                            string line;
-                            getline(cin, line);
-                            countries.insert(country);
-                            istringstream iss(line);
-                            while(getline(iss, country, ',')) {
-                                countries.insert(country);
-                            }
-                            for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {
-                                for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
-                                    for (auto v: m.f3_shortest_paths(ap_code_s, ap_code_t,countries)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        else{
-                            for (string ap_code_s: m.findNearestAirports(lat1, lon1)) {
-                                for (string ap_code_t: m.findNearestAirports(lat2, lon2)) {
-                                    for (auto v: m.shortest_paths2(ap_code_s, ap_code_t)) {
-                                        res.push_back(v);
-                                    }
-                                }
-                            }
-                        }
-                        int min=INT_MAX;
-                        for(auto path: res) {
-                            if (path.size() <= min) {
-                                min = path.size();
-                            }
-                        }
-                        for(auto path : res){
-                            if(path.size()==min){
-                                for(int i = 0; i < path.size() - 1; i++){
-                                    cout << path[i]->getInfo().getName() << " --> ";
-                                }
-                                cout << path[(path.size() - 1)]->getInfo().getName();
-                                cout << "\n";
-                            }
-                        }
+                        f.flight_coordinates_coordinates(lat1,lon1,lat2,lon2,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //coordinates ---> coordinates
                         break;
                     }
@@ -896,9 +315,7 @@ int main() {
                         cout << "Invalid choice. Please enter a valid option." << '\n';
                         break;
                     }
-
                 }
-
                 break;
             }
             case 12: {

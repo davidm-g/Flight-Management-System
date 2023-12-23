@@ -110,6 +110,12 @@
 		<Unit filename="C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/Graph_Project/graphs_proj/src/Data.h">
 			<Option target="GraphProject"/>
 		</Unit>
+		<Unit filename="C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/Graph_Project/graphs_proj/src/FlightOption.cpp">
+			<Option target="GraphProject"/>
+		</Unit>
+		<Unit filename="C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/Graph_Project/graphs_proj/src/FlightOption.h">
+			<Option target="GraphProject"/>
+		</Unit>
 		<Unit filename="C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/Graph_Project/graphs_proj/src/Menu.cpp">
 			<Option target="GraphProject"/>
 		</Unit>

@@ -213,6 +213,30 @@ src/Data.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GraphProject.dir\build.make CMakeFiles/GraphProject.dir/src/Data.cpp.s
 .PHONY : src/Data.cpp.s
 
+src/FlightOption.obj: src/FlightOption.cpp.obj
+.PHONY : src/FlightOption.obj
+
+# target to build an object file
+src/FlightOption.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GraphProject.dir\build.make CMakeFiles/GraphProject.dir/src/FlightOption.cpp.obj
+.PHONY : src/FlightOption.cpp.obj
+
+src/FlightOption.i: src/FlightOption.cpp.i
+.PHONY : src/FlightOption.i
+
+# target to preprocess a source file
+src/FlightOption.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GraphProject.dir\build.make CMakeFiles/GraphProject.dir/src/FlightOption.cpp.i
+.PHONY : src/FlightOption.cpp.i
+
+src/FlightOption.s: src/FlightOption.cpp.s
+.PHONY : src/FlightOption.s
+
+# target to generate assembly for a file
+src/FlightOption.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GraphProject.dir\build.make CMakeFiles/GraphProject.dir/src/FlightOption.cpp.s
+.PHONY : src/FlightOption.cpp.s
+
 src/Menu.obj: src/Menu.cpp.obj
 .PHONY : src/Menu.obj
 
@@ -280,6 +304,9 @@ help:
 	@echo ... src/Data.obj
 	@echo ... src/Data.i
 	@echo ... src/Data.s
+	@echo ... src/FlightOption.obj
+	@echo ... src/FlightOption.i
+	@echo ... src/FlightOption.s
 	@echo ... src/Menu.obj
 	@echo ... src/Menu.i
 	@echo ... src/Menu.s

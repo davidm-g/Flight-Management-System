@@ -24,7 +24,7 @@ public:
     Menu();
     int totalAirports();
     int totalFlights();
-    pair<int, int> numFlightsAirlines(string apcode);
+    void numFlightsAirlines(string apcode);
     int num_flights_airlines(string acode);
     int num_flights_city(string name);
     int num_countries_city(string city);

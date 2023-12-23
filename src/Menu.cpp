@@ -82,9 +82,8 @@ int Menu::num_countries_airport(std::string acode) {
 /**
  * nr of flights and different airlines from a given airport - complexity O(E * log N) where E is the number of adjacent edges for the specified airport code and N is the number of unique airlines encountered in these edges.
  * @param apcode of the source airport
- * @return pair of number of flights and airlines used
  */
-pair<int, int> Menu::numFlightsAirlines(string apcode){
+void Menu::numFlightsAirlines(string apcode){
     set<string> used_airlines;
     Graph<Airport> grafo=d.getAP();
     int n_voos = 0;
@@ -97,8 +96,9 @@ pair<int, int> Menu::numFlightsAirlines(string apcode){
             used_airlines.insert(edge.getAirlinecode());
         }
     }
+    cout << n_voos << " flights out of " << apcode << " airport from "
+         << n_airlines << " different airlines." << '\n';
 
-    return make_pair(n_voos, n_airlines);
 }
 /**
  * retrieves the amount of flights that a city receives and release - complexity O(V) where V is the number of vertices in the graph
