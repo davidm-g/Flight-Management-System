@@ -33,12 +33,13 @@ unordered_map<string, Vertex<Airport>* > Data::getAirports() {
  * @return unordered_map that stores key value pairs
  * of cities and their corresponding Airports
  */
-unordered_multimap<string, Vertex<Airport>*> Data::getAirportsByCity(){
+unordered_map<string, vector<Vertex<Airport>*>> Data::getAirportsByCity(){
     return airports_by_city;
 }
 
 /**
- * function that parses the data from the airports.csv file and uses it to build a graph accordingly - complexity O(N) where N is the number of lines in the file
+ * function that parses the data from the airports.csv file and uses it to build a graph accordingly
+ * - complexity O(N) where N is the number of lines in the file
  */
 void Data::parse_airports() {
     ifstream apfile("airports.csv");
@@ -61,12 +62,13 @@ void Data::parse_airports() {
         Vertex<Airport>* aero_vertex =  new Vertex<Airport>(aero);
         ap.addVertex(  aero_vertex);
         airports[code]=aero_vertex;
-        airports[city] = aero_vertex;
+        airports_by_city[city].push_back(aero_vertex);
     }
 
 }
 /**
- * function that parses the data from the airlines.csv file and uses it to build a graph accordingly - complexity O(N) where N is the number of lines in the file
+ * function that parses the data from the airlines.csv file and uses it to build a graph accordingly
+ * - complexity O(N) where N is the number of lines in the file
  */
 void Data::parse_airlines() {
     ifstream alfile("airlines.csv");
@@ -89,7 +91,8 @@ void Data::parse_airlines() {
 
 
 /**
- * function that parses the data from the flights.csv file and uses it to build a graph accordingly - complexity O(N) where N is the number of lines in the file
+ * function that parses the data from the flights.csv file and uses it to build a graph accordingly
+ * - complexity O(N) where N is the number of lines in the file
  */
 void Data::parse_flights() {
     ifstream ffile("flights.csv");

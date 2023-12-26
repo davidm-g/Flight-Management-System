@@ -79,7 +79,6 @@ void FlightOption::flight_airport_airport(std::string source, std::string target
  * @param f3 avoid a set of countries filter
  */
 void FlightOption::flight_airport_city(std::string source, std::string target, bool f1, bool f2, bool f3) {
-
     vector<vector<Vertex<Airport>*>> res;
     if(f1){
         for(string airport_code : m.city_airports(target)) {

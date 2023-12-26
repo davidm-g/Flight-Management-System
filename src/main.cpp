@@ -63,7 +63,16 @@ int main() {
                         cout<<"Enter the desired city:";
                         string city;
                         cin>>city;
-                        cout << "The number of in and out flights from/to " << city << " is : " << m.num_flights_city(city) << '\n' << '\n';
+                        /*if(m.getData().getAirportsByCity()[city].size() > 1) {
+                            cout << "There are " << m.getData().getAirportsByCity()[city].size() << " with the same name!" << '\n';
+                            cout << "Enter the desired city's country:";
+                            string country;
+                            cin >> country;
+                            cout << "The number of in and out flights from/to " << city << " is : "
+                                 << m.num_flights_city_country(city, country) << '\n' << '\n';
+                        }*/
+                        cout << "The number of in and out flights from/to " << city << " is : "
+                             << m.num_flights_city(city) << '\n' << '\n';
                         break;
                     }
                     case 2:{
@@ -81,7 +90,7 @@ int main() {
                 break;
             }
             case 5: {
-                cout<<"1. Number of different countries that a given city fligths to"<<endl;
+                cout<<"1. Number of different countries that a given city flights to"<<endl;
                 cout<<"2. Number of different countries that a given airport flights to"<<endl;
                 cout << "Please enter your desired choice:";
                 int escolha;
@@ -193,6 +202,7 @@ int main() {
                         cout << "Insert a target city:";
                         string target;
                         getline(cin,target);
+                        vector<string> airports;
                         cout << '\n';
                         cout << "The best flight options between that airport and that city are:" << '\n';
                         f.flight_airport_city(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);

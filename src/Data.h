@@ -23,7 +23,7 @@ class Data {
         Graph<Airport> ap;
         std::unordered_map<string,Airline> airlines;
         std::unordered_map<string,Vertex<Airport>*> airports;
-        std::unordered_multimap<string,Vertex<Airport>*> airports_by_city;
+        std::unordered_map<string,vector<Vertex<Airport>*>> airports_by_city;
     public:
         void parse_airports();
         Graph<Airport> getAP();
@@ -31,7 +31,7 @@ class Data {
         void parse_airlines();
         unordered_map<string, Airline> getAirlines();
         unordered_map<string, Vertex<Airport>*> getAirports();
-        unordered_multimap<string, Vertex<Airport>*> getAirportsByCity();
+        unordered_map<string, vector<Vertex<Airport>*>> getAirportsByCity();
         void calculate_indegree();
 };
 

@@ -6,6 +6,7 @@
 #include <cmath>
 #include <limits.h>
 #include <float.h>
+#include <utility>
 
 using namespace std;
 /**
@@ -18,6 +19,7 @@ Menu::Menu() {
     d.parse_flights();
     d.calculate_indegree();
 }
+
 
 /**
  * function that retrieves total nr of airports - complexity O(1)
@@ -109,12 +111,25 @@ void Menu::numFlightsAirlines(string apcode){
 int Menu::num_flights_city(string name){
     int count = 0;
     for(auto v : d.getAP().getVertexSet()){
+
         if(v->getInfo().getCity() == name){
             count += (v->getAdj().size() + v->getIndegree());
         }
     }
     return count;
 }
+/*
+int Menu::num_flights_city_country(string city,string country){
+    int count = 0;
+    for(auto v : d.getAP().getVertexSet()){
+
+        if(v->getInfo().getCity() == city && v->getInfo().getCountry() == country){
+            count += (v->getAdj().size() + v->getIndegree());
+        }
+    }
+    return count;
+}
+*/
 /**
  * retrieves the amount of flights that an airline does - complexity O(V * E) where V is the number of vertices and E the number of edges in the graph
  * @param acode of the airline
@@ -139,7 +154,7 @@ void Menu::bfs_Stops(std::string acode, int max_stops) {
     int n_airports = 0;
     queue<pair<int,Vertex<Airport>*>> q;
     unordered_set<string> countries;
-    unordered_set<string> cities;
+    set<pair<string,string>> cities;
     for(auto v : d.getAP().getVertexSet()) v->setVisited(false);
     auto v =  d.getAP().findVertex(acode);
     v->setVisited(true);
@@ -151,12 +166,8 @@ void Menu::bfs_Stops(std::string acode, int max_stops) {
             for(auto e : current->getAdj()){
                 if(!e.getDest()->isVisited()) {
                     n_airports++;
-                    if (countries.find(e.getDest()->getInfo().getCountry()) == countries.end()) {
-                        countries.insert(e.getDest()->getInfo().getCountry());
-                    }
-                    if (cities.find(e.getDest()->getInfo().getCity())== cities.end()) {
-                        cities.insert(e.getDest()->getInfo().getCity());
-                    }
+                    countries.insert(e.getDest()->getInfo().getCountry());
+                    cities.insert(make_pair(e.getDest()->getInfo().getCity(),e.getDest()->getInfo().getCountry()));
                     e.getDest()->setVisited(true);
                     q.push(make_pair(distance + 1, e.getDest()));
                 }
@@ -177,7 +188,7 @@ void Menu::bfs_Stops(std::string acode, int max_stops) {
 void Menu::dfs_Des(string acode){
     int n_airports = 0;
     unordered_set<string> countries;
-    unordered_set<string> cities;
+    set<pair<string, string>> cities;
     for(auto v : d.getAP().getVertexSet()) v->setVisited(false);
     auto v=  d.getAP().findVertex(acode);
     dfs_Visit_Des(v,countries,cities,n_airports);
@@ -195,19 +206,14 @@ void Menu::dfs_Des(string acode){
  * @param n_airports nr of airports already visited
  */
 void Menu::dfs_Visit_Des(Vertex<Airport> * v , unordered_set<string>& countries,
-                          unordered_set<string>& cities, int& n_airports){
+                          set<pair<string,string>>& cities, int& n_airports){
 
     v->setVisited(true);
     for(auto e : v->getAdj()){
         if(!e.getDest()->isVisited()) {
             n_airports++;
-            if (countries.find(e.getDest()->getInfo().getCountry()) == countries.end()) {
-                countries.insert(e.getDest()->getInfo().getCountry());
-            }
-            if (cities.find(e.getDest()->getInfo().getCity())== cities.end()) {
-
-                cities.insert(e.getDest()->getInfo().getCity());
-            }
+            countries.insert(e.getDest()->getInfo().getCountry());
+            cities.insert(make_pair(e.getDest()->getInfo().getCity(), e.getDest()->getInfo().getCountry()));
             dfs_Visit_Des(e.getDest(),countries,cities,n_airports);
         }
     }
@@ -242,7 +248,7 @@ vector<pair<int, pair<Airport,Airport> >> Menu::graph_diameter() {
             }
             Q.pop();
         }
-
+        for(auto v : d.getAP().getVertexSet()) v->setVisited(false);
     }
 
     for(auto v : re){
@@ -251,6 +257,7 @@ vector<pair<int, pair<Airport,Airport> >> Menu::graph_diameter() {
     return res;
 
 }
+
 /**
  * retrieves the top k airports by air traffic - complexity O(V * log V) where V is the number of vertices in the graph
  * @param k
@@ -261,7 +268,7 @@ vector<pair<int,Airport>> Menu::greatest_air_traffic(int k){
     vector<pair<int,Airport>> temp;
     vector<pair<int,Airport>> res;
     for(auto v : d.getAP().getVertexSet()){
-        temp.push_back(make_pair(v->getAdj().size()+ v->getIndegree(),v->getInfo()));
+        temp.push_back(make_pair(v->getAdj().size() + v->getIndegree(),v->getInfo()));
 
     }
     sort(temp.begin(), temp.end(),[](pair<int,Airport> a, pair<int,Airport> b){ return a.first > b.first;});
@@ -278,19 +285,17 @@ vector<pair<int,Airport>> Menu::greatest_air_traffic(int k){
 unordered_set<Vertex<Airport>*>Menu::Articu_points(){
     stack<Airport> S;
     unordered_set<Vertex<Airport>*> res;
-    int index = 1;
+    int index=1;
     for(auto v : d.getAP().getVertexSet()){
         v->setVisited(false);
-        v->setProcessing(false);
-        v->setNum(0);
-        v->setLow(0);
+
     }
     for(auto v : d.getAP().getVertexSet()){
         if(!v->isVisited()){
+            index=1;
             dfs_arti(v,S,res,index);
         }
     }
-
     return res;
 }
 
@@ -310,16 +315,19 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, unordered_set<Vertex<
     s.push(v->getInfo());
     int children = 0;
     for (auto e: v->getAdj()) {
-        if (!e.getDest()->isVisited()) {
+        auto w=e.getDest();
+        if (!w->isVisited()) {
             children++;
-            dfs_arti(e.getDest(), s, res, i);
-            v->setLow(min(v->getLow(), e.getDest()->getLow()));
-            if ((v->getNum() != 1 && e.getDest()->getLow() >= v->getNum()) || (children > 1 && v->getNum() == 1))
+            dfs_arti(w, s, res, i);
+            v->setLow(min(v->getLow(), w->getLow()));
+            if ((v->getNum() != 1 && (w->getLow() >= v->getNum())) || (v->getNum()==1 && children > 1))
                 res.insert(v);
 
-        } else if (e.getDest()->isProcessing()) {
-            v->setLow(min(v->getLow(), e.getDest()->getNum()));
         }
+        else if (w->isProcessing()){
+            v->setLow(min(v->getLow(),w->getNum()));
+        }
+
     }
     s.pop();
     v->setProcessing(false);
@@ -400,6 +408,17 @@ vector<string> Menu::city_airports(string city){
     }
     return res;
 }
+/*
+vector<string> Menu::city_airport_bycountry(string city, string country){
+    vector<string> res;
+    for(auto vertex: d.getAP().getVertexSet()){
+        if(vertex->getInfo().getCity()==city && vertex->getInfo().getCountry() == country){}
+            res.push_back(vertex->getInfo().getCode());
+    }
+    return res;
+}
+
+*/
 /**
  * function to know the distance between two airports, by using its coordinates - complexity O(1)
  * @param lat1 latitude of 1st airport
@@ -454,7 +473,9 @@ vector<string> Menu::findNearestAirports(double lat, double lon) {
 }
 
 /**
- * function based on shortest_paths, except using a filter that turns the best flight - complexity O(P * N * E * log P) where V is the number of vertices, E is the number of edges, and P is the number of paths found between the source and target nodes.
+ * function based on shortest_paths, except using a filter that turns the best flight -
+ * complexity O(P * N * E * log P) where V is the number of vertices, E is the number of edges,
+ * and P is the number of paths found between the source and target nodes.
  * option into the path that uses the minimum number of different airlines,
  * @param start code of source airport
  * @param target code of target airport
@@ -490,7 +511,9 @@ vector<vector<Vertex<Airport>*>> Menu::f1_shortest_paths(string source, string t
 
 }
 /**
- * function based on shortest_paths, except using a filter that turns the best flight - complexity O(V + E + P) where V is the number of vertices, E is the number of edges, and P is the number of paths found between the source and target nodes.
+ * function based on shortest_paths, except using a filter that turns the
+ * best flight - complexity O(V + E + P) where V is the number of vertices, E is
+ * the number of edges, and P is the number of paths found between the source and target nodes.
  * option into the path that uses the given pretended airlines
  * @param start code of source airport
  * @param target code of target airport
@@ -499,7 +522,6 @@ vector<vector<Vertex<Airport>*>> Menu::f1_shortest_paths(string source, string t
  */
 
 vector<vector<Vertex<Airport>*>> Menu::f2_shortest_paths(string source, string target, set<string> air){
-
     queue<std::vector<Vertex<Airport>*>> queue;
     set<Airport> visited;
     vector<std::vector<Vertex<Airport>*>> paths; // todos os caminhos possiveis
@@ -511,10 +533,7 @@ vector<vector<Vertex<Airport>*>> Menu::f2_shortest_paths(string source, string t
         for(auto v : d.getAP().getVertexSet()){
             if(v->getInfo().getName() == source){
                 source = v->getInfo().getCode();
-                break;
-            }
-        }
-    }
+                break;}}}
     if (d.getAirports().find(target) == d.getAirports().end()) {
         for(auto v : d.getAP().getVertexSet()){
             if(v->getInfo().getName() == target){
@@ -529,16 +548,15 @@ vector<vector<Vertex<Airport>*>> Menu::f2_shortest_paths(string source, string t
         path = queue.front();
         current_node = path.back()->getInfo();
         queue.pop();
-
         if (current_node.getCode() == target) {
             if(find(paths.begin(), paths.end(), path) == paths.end())
                 paths.push_back(path);
         }
-
         if (visited.find(current_node) == visited.end()) {
             visited.insert(current_node);
             for (auto e : d.getAirports()[current_node.getCode()]->getAdj()) {
-                if (visited.find(e.getDest()->getInfo()) == visited.end() && air.find(e.getAirlinecode()) != air.end()) {
+                if (visited.find(e.getDest()->getInfo()) == visited.end() &&
+                air.find(e.getAirlinecode()) != air.end()) {
                     new_path = path;
                     new_path.push_back(e.getDest());
                     queue.push(new_path);
@@ -552,20 +570,20 @@ vector<vector<Vertex<Airport>*>> Menu::f2_shortest_paths(string source, string t
     for(auto v : paths){
         if(v.size() == m) res.push_back(v);
     }
-
     return res;
-
 }
 /**
- * function based on shortest_paths, except using a filter that turns the best flight - complexity O(V + E + P) where V is the number of vertices, E is the number of edges, and P is the number of paths found between the source and target nodes.
+ * function based on shortest_paths, except using a filter that turns the best flight
+ * - complexity O(V + E + P) where V is the number of vertices, E is the number of edges,
+ * and P is the number of paths found between the source and target nodes.
  * option into the path that avoids the given countries
  * @param start code of source airport
  * @param target code of target airport
  * @param countries set of countries to avoid
  * @return best flight options, based on the filter
  */
-vector<vector<Vertex<Airport>*>> Menu::f3_shortest_paths(string source, string target, set<string> countries) {
-
+vector<vector<Vertex<Airport>*>> Menu::f3_shortest_paths
+(string source,string target, set<string> countries) {
     queue<std::vector<Vertex<Airport> *>> queue;
     set<Airport> visited;
     vector<std::vector<Vertex<Airport> *>> paths; // todos os caminhos possiveis
@@ -577,31 +595,23 @@ vector<vector<Vertex<Airport>*>> Menu::f3_shortest_paths(string source, string t
         for (auto v: d.getAP().getVertexSet()) {
             if (v->getInfo().getName() == source) {
                 source = v->getInfo().getCode();
-                break;
-            }
-        }
-    }
+                break;}}}
     if (d.getAirports().find(target) == d.getAirports().end()) {
         for (auto v: d.getAP().getVertexSet()) {
             if (v->getInfo().getName() == target) {
                 target = v->getInfo().getCode();
-                break;
-            }
-        }
-    }
+                break;}}}
     queue.push({d.getAirports()[source]});
     Airport current_node;
     while (!queue.empty()) {
         path = queue.front();
         current_node = path.back()->getInfo();
         queue.pop();
-
         if (current_node.getCode() == target) {
             if (find(paths.begin(), paths.end(), path) == paths.end())
-                paths.push_back(path);
-        }
-
-        if (visited.find(current_node) == visited.end() && countries.find(current_node.getCountry()) == countries.end()) {
+                paths.push_back(path);}
+        if (visited.find(current_node) == visited.end() &&
+        countries.find(current_node.getCountry()) == countries.end()) {
             visited.insert(current_node);
             for (auto e: d.getAirports()[current_node.getCode()]->getAdj()) {
                 if (visited.find(e.getDest()->getInfo()) == visited.end() &&
@@ -614,14 +624,9 @@ vector<vector<Vertex<Airport>*>> Menu::f3_shortest_paths(string source, string t
         }
     }
     for (auto v: paths) {
-        if (v.size() <= m) m = v.size();
-    }
+        if (v.size() <= m) m = v.size();}
     for (auto v: paths) {
-        if (v.size() == m) res.push_back(v);
-    }
-
+        if (v.size() == m) res.push_back(v);}
     return res;
-
-
 }
 

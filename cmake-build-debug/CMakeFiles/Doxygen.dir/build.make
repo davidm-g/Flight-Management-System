@@ -43,19 +43,19 @@ cmake_force:
 SHELL = cmd.exe
 
 # The CMake executable.
-CMAKE_COMMAND = "C:\Program Files\JetBrains\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe"
+CMAKE_COMMAND = C:\Users\tomas\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe
 
 # The command to remove a file.
-RM = "C:\Program Files\JetBrains\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f
+RM = C:\Users\tomas\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj"
+CMAKE_SOURCE_DIR = C:\Users\tomas\graphs_proj
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj\cmake-build-debug"
+CMAKE_BINARY_DIR = C:\Users\tomas\graphs_proj\cmake-build-debug
 
 # Utility rule file for Doxygen.
 
@@ -66,8 +66,8 @@ include CMakeFiles/Doxygen.dir/compiler_depend.make
 include CMakeFiles/Doxygen.dir/progress.make
 
 CMakeFiles/Doxygen:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir="C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Generating API documentation with Doxygen"
-	"C:\Program Files\doxygen\bin\doxygen.exe" "C:/Users/afdom/OneDrive/Ambiente de Trabalho/AED/Projects/Graph_Project/graphs_proj/cmake-build-debug/Doxyfile"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=C:\Users\tomas\graphs_proj\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating API documentation with Doxygen"
+	"C:\Program Files\doxygen\bin\doxygen.exe" C:/Users/tomas/graphs_proj/cmake-build-debug/Doxyfile
 
 Doxygen: CMakeFiles/Doxygen
 Doxygen: CMakeFiles/Doxygen.dir/build.make
@@ -82,6 +82,6 @@ CMakeFiles/Doxygen.dir/clean:
 .PHONY : CMakeFiles/Doxygen.dir/clean
 
 CMakeFiles/Doxygen.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj" "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj" "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj\cmake-build-debug" "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj\cmake-build-debug" "C:\Users\afdom\OneDrive\Ambiente de Trabalho\AED\Projects\Graph_Project\graphs_proj\cmake-build-debug\CMakeFiles\Doxygen.dir\DependInfo.cmake" --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\tomas\graphs_proj C:\Users\tomas\graphs_proj C:\Users\tomas\graphs_proj\cmake-build-debug C:\Users\tomas\graphs_proj\cmake-build-debug C:\Users\tomas\graphs_proj\cmake-build-debug\CMakeFiles\Doxygen.dir\DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Doxygen.dir/depend
 
