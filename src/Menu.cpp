@@ -16,6 +16,7 @@ Menu::Menu() {
     d.parse_airports();
     d.parse_airlines();
     d.parse_flights();
+    d.calculate_indegree();
 }
 
 /**

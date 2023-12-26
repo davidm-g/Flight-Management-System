@@ -32,6 +32,7 @@ class Data {
         unordered_map<string, Airline> getAirlines();
         unordered_map<string, Vertex<Airport>*> getAirports();
         unordered_multimap<string, Vertex<Airport>*> getAirportsByCity();
+        void calculate_indegree();
 };
 
 

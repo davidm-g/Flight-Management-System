@@ -77,9 +77,14 @@ void Data::parse_flights() {
         getline(iss, al_code);
 
         ap.addEdge(Airport(src), Airport(target),al_code, 0.0);
-        for (auto a : ap.getVertexSet())
-            if(a->getInfo().getCode() == target)
-                a->setIndegree(a->getIndegree() + 1);
     }
 
+}
+
+void Data::calculate_indegree(){
+    for(auto v : ap.getVertexSet()){
+        for(auto e : v->getAdj()){
+            e.getDest()->setIndegree(e.getDest()->getIndegree() + 1);
+        }
+    }
 }
