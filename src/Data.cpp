@@ -2,22 +2,44 @@
 #include "Data.h"
 
 using namespace std;
-
+/**
+ * function that retrieves the graph contain all the information about the flight management system - complexity O(1)
+ * @return graph whose vertices correspond to Airports and the Edges to flights
+ */
 Graph<Airport> Data::getAP(){
     return ap;
 }
-
+/**
+ * function that retrieves an unordered_map that stores key value pairs
+ * of airline codes and their corresponding Airlines, allowing for constant lookup of Airlines by their code - complexity O(1)
+ * @return unordered_map that stores key value pairs
+ * of airline codes and their corresponding Airlines
+ */
 unordered_map<string, Airline> Data::getAirlines() {
     return airlines;
 }
+/**
+  * function that retrieves an unordered_map that stores key value pairs
+ * of airport codes and their corresponding Airports, allowing constant lookup of Airports by their code - complexity O(1)
+ * @return unordered_map that stores key value pairs
+ * of airport codes and their corresponding Airports
+ */
 unordered_map<string, Vertex<Airport>* > Data::getAirports() {
     return airports;
 }
+/**
+  * function that retrieves an unordered_multimap that stores key value pairs
+ * of cities and their corresponding Airports, allowing constant lookup of Airports by their city - complexity O(1)
+ * @return unordered_map that stores key value pairs
+ * of cities and their corresponding Airports
+ */
 unordered_multimap<string, Vertex<Airport>*> Data::getAirportsByCity(){
     return airports_by_city;
 }
 
-
+/**
+ * function that parses the data from the airports.csv file and uses it to build a graph accordingly - complexity O(N) where N is the number of lines in the file
+ */
 void Data::parse_airports() {
     ifstream apfile("airports.csv");
     string line;
@@ -43,6 +65,9 @@ void Data::parse_airports() {
     }
 
 }
+/**
+ * function that parses the data from the airlines.csv file and uses it to build a graph accordingly - complexity O(N) where N is the number of lines in the file
+ */
 void Data::parse_airlines() {
     ifstream alfile("airlines.csv");
     string line;
@@ -63,7 +88,9 @@ void Data::parse_airlines() {
 }
 
 
-
+/**
+ * function that parses the data from the flights.csv file and uses it to build a graph accordingly - complexity O(N) where N is the number of lines in the file
+ */
 void Data::parse_flights() {
     ifstream ffile("flights.csv");
     string line;
@@ -80,7 +107,9 @@ void Data::parse_flights() {
     }
 
 }
-
+/**
+ * function that calculates the indegree of each vertex - complexity O(V + E) where V is the number of vertices and E the number of edges of each vertex
+ */
 void Data::calculate_indegree(){
     for(auto v : ap.getVertexSet()){
         for(auto e : v->getAdj()){
