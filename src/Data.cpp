@@ -3,8 +3,8 @@
 
 using namespace std;
 /**
- * function that retrieves the graph contain all the information about the flight management system - complexity O(1)
- * @return graph whose vertices correspond to Airports and the Edges to flights
+ * function that retrieves the graph that contains all the information about the flight management system - complexity O(1)
+ * @return graph whose vertexes correspond to Airports and the Edges to flights
  */
 Graph<Airport> Data::getAP(){
     return ap;
@@ -37,7 +37,7 @@ unordered_map<string,Vertex<Airport>*> Data::getAirportsName() {
     return airports_names;
 }
 /**
-  * function that retrieves an unordered_multimap that stores key value pairs
+  * function that retrieves an unordered_map that stores key value pairs
  * of cities and their corresponding countries, allowing constant lookup of countries by their city - complexity O(1)
  * @return unordered_map that stores key value pairs
  * of cities and their corresponding countries

@@ -20,7 +20,7 @@ Menu::Menu() {
     d.calculate_indegree();
 }
 /**
- * funcion that returns the data associated with the project
+ * function that returns the data associated with the project
  * @return data
  */
 Data Menu::getData(){
@@ -168,7 +168,7 @@ int Menu::num_flights_city_country(string city,string country){
 /**
  * retrieves the amount of flights that an airline does - complexity O(V * E) where V is the number of vertices and E the number of edges in the graph
  * @param acode of the airline
- * @return the number of in and out flights in a determined airline.
+ * @return the number of in and out flights off a determined airline.
  */
 int Menu::num_flights_airlines(std::string acode) {
     int n_voos = 0;
@@ -182,8 +182,8 @@ int Menu::num_flights_airlines(std::string acode) {
 
 /**
  * Reachable destinations with x stops - complexity O(V + E) where V is the number of vertices and E the number of edges in the graph
- * @param acode
- * @param max_stops
+ * @param acode of the source airport
+ * @param max_stops maximum number of stops
  */
 void Menu::bfs_Stops(std::string acode, int max_stops) {
     int n_airports = 0;
@@ -517,7 +517,7 @@ vector<string> Menu::findNearestAirports(double lat, double lon) {
 }
 
 /**
- * function based on shortest_paths, except using a filter that turns the best flight -
+ * function based on shortest_paths, except using a filter -
  * complexity O(P * N * E * log P) where V is the number of vertices, E is the number of edges,
  * and P is the number of paths found between the source and target nodes.
  * option into the path that uses the minimum number of different airlines,
@@ -555,8 +555,8 @@ vector<vector<Vertex<Airport>*>> Menu::f1_shortest_paths(string source, string t
 
 }
 /**
- * function based on shortest_paths, except using a filter that turns the
- * best flight - complexity O(V + E + P) where V is the number of vertices, E is
+ * function based on shortest_paths, except using a filter
+ * - complexity O(V + E + P) where V is the number of vertices, E is
  * the number of edges, and P is the number of paths found between the source and target nodes.
  * option into the path that uses the given pretended airlines
  * @param start code of source airport
@@ -617,7 +617,7 @@ vector<vector<Vertex<Airport>*>> Menu::f2_shortest_paths(string source, string t
     return res;
 }
 /**
- * function based on shortest_paths, except using a filter that turns the best flight
+ * function based on shortest_paths, except using a filter
  * - complexity O(V + E + P) where V is the number of vertices, E is the number of edges,
  * and P is the number of paths found between the source and target nodes.
  * option into the path that avoids the given countries

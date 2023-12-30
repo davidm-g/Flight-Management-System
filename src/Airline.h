@@ -6,7 +6,7 @@ using namespace std;
 #define GRAPHPROJECT_AIRLINE_H
 /**
  * @class Airline
- * @brief Portrays an airline, identifying it by code, name, callsign and country
+ * @brief Portrays an airline, identified it by code, name, callsign and country
  */
 
 class Airline {

@@ -6,7 +6,7 @@ using namespace std;
 #define GRAPHPROJECT_AIRPORT_H
 /**
  * @class Airport
- * @brief Identifies the Airport class by its code, name,city,country and coordinates.
+ * @brief Identifies the Airport class by its code, name, city, country and coordinates.
  */
 class Airport {
     private:
