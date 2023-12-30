@@ -80,8 +80,18 @@ void FlightOption::flight_airport_airport(std::string source, std::string target
  */
 void FlightOption::flight_airport_city(std::string source, std::string target, bool f1, bool f2, bool f3) {
     vector<vector<Vertex<Airport>*>> res;
+    vector<string> airports;
+    if(m.getData().getCity_by_country()[target].size() > 1){
+        cout << "There are " << m.getData().getAirportsByCity()[target].size() << " cities with the same name!" << '\n';
+        cout << "Enter the desired target city's country:";
+        string country;
+        cin >> country;
+        airports = m.city_airports_by_country(target,country);
+    }
+    else{ airports = m.city_airports(target);}
+
     if(f1){
-        for(string airport_code : m.city_airports(target)) {
+        for(string airport_code : airports) {
             for (auto v: m.f1_shortest_paths(source, airport_code)) {
                 res.push_back(v);
             }
@@ -98,7 +108,7 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
         while(getline(iss, acode, ',')) {
             air.insert(acode);
         }
-        for(string airport_code : m.city_airports(target)) {
+        for(string airport_code : airports) {
             for (auto v: m.f2_shortest_paths(source, airport_code,air)) {
                 res.push_back(v);
             }
@@ -115,14 +125,14 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
         while(getline(iss, country, ',')) {
             countries.insert(country);
         }
-        for(string airport_code : m.city_airports(target)) {
+        for(string airport_code : airports) {
             for (auto v: m.f3_shortest_paths(source, airport_code,countries)) {
                 res.push_back(v);
             }
         }
     }
     else {
-        for(string airport_code : m.city_airports(target)) {
+        for(string airport_code : airports) {
             for (auto v: m.shortest_paths2(source, airport_code)) {
                 res.push_back(v);
             }
@@ -135,6 +145,7 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
             min = path.size();
         }
     }
+    cout << "The best flight options between that airport and that city are:" << '\n';
     for(auto path : res){
         if(path.size()==min){
             for(int i = 0; i < path.size() - 1; i++){
@@ -155,7 +166,6 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
  * @param f3 avoid a set of countries filter
  */
 void FlightOption::flight_airport_coordinates(std::string source, float lat, float longi, bool f1, bool f2, bool f3) {
-
     vector<vector<Vertex<Airport>*>> res;
     if(f1){
         for(string airport_code : m.findNearestAirports(lat, longi)) {
@@ -231,10 +241,18 @@ void FlightOption::flight_airport_coordinates(std::string source, float lat, flo
  */
 
 void FlightOption::flight_city_airport(std::string source, std::string target, bool f1, bool f2, bool f3) {
-
     vector<vector<Vertex<Airport>*>> res;
+    vector<string> airports;
+    if(m.getData().getCity_by_country()[target].size() > 1){
+        cout << "There are " << m.getData().getAirportsByCity()[target].size() << " cities with the same name!" << '\n';
+        cout << "Enter the desired source city's country:";
+        string country;
+        cin >> country;
+        airports = m.city_airports_by_country(target,country);
+    }
+    else{ airports = m.city_airports(target);}
     if(f1){
-        for(string airport_code : m.city_airports(source)) {
+        for(string airport_code : airports) {
             for (auto v: m.f1_shortest_paths(airport_code, target)) {
                 res.push_back(v);
             }
@@ -251,7 +269,7 @@ void FlightOption::flight_city_airport(std::string source, std::string target, b
         while(getline(iss, acode, ',')) {
             air.insert(acode);
         }
-        for(string airport_code : m.city_airports(source)) {
+        for(string airport_code : airports) {
             for (auto v: m.f2_shortest_paths(airport_code, target, air)) {
                 res.push_back(v);
             }
@@ -268,14 +286,14 @@ void FlightOption::flight_city_airport(std::string source, std::string target, b
         while(getline(iss, country, ',')) {
             countries.insert(country);
         }
-        for(string airport_code : m.city_airports(source)) {
+        for(string airport_code : airports) {
             for (auto v: m.f3_shortest_paths(airport_code, target, countries)) {
                 res.push_back(v);
             }
         }
     }
     else {
-        for(string airport_code : m.city_airports(source)) {
+        for(string airport_code : airports) {
             for (auto v: m.shortest_paths2(airport_code, target)) {
                 res.push_back(v);
             }
@@ -287,6 +305,7 @@ void FlightOption::flight_city_airport(std::string source, std::string target, b
             min = path.size();
         }
     }
+    cout << "The best flight options between that city and that airport are:" << '\n';
     for(auto path : res){
         if(path.size()==min){
             for(int i = 0; i < path.size() - 1; i++){
@@ -306,11 +325,31 @@ void FlightOption::flight_city_airport(std::string source, std::string target, b
  * @param f3 avoid a set of countries filter
  */
 void FlightOption::flight_city_city(std::string source, std::string target, bool f1, bool f2, bool f3) {
-
     vector<vector<Vertex<Airport>*>> res;
+    vector<string> airports_source;
+    vector<string> airports_target;
+    if(m.getData().getCity_by_country()[source].size() > 1){
+        cout << "There are " << m.getData().getAirportsByCity()[source].size() << " source cities with the same name!" << '\n';
+        cout << "Enter the desired source city's country:";
+        string country;
+        cin >> country;
+        airports_source = m.city_airports_by_country(source,country);
+    }
+    else{ airports_source = m.city_airports(source);}
+
+
+    if(m.getData().getCity_by_country()[target].size() > 1){
+        cout << "There are " << m.getData().getAirportsByCity()[target].size() << " target cities with the same name!" << '\n';
+        cout << "Enter the desired target city's country:";
+        string country;
+        cin >> country;
+        airports_target = m.city_airports_by_country(target,country);
+    }
+    else{ airports_target = m.city_airports(target);}
+
     if(f1){
-        for (string airport_code: m.city_airports(source)) {
-            for (string t: m.city_airports(target)) {
+        for (string airport_code: airports_source) {
+            for (string t: airports_target){
                 for (auto v: m.f1_shortest_paths(airport_code, t)) {
                     res.push_back(v);
                 }
@@ -328,8 +367,8 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
         while(getline(iss, acode, ',')) {
             air.insert(acode);
         }
-        for (string airport_code: m.city_airports(source)) {
-            for (string t: m.city_airports(target)) {
+        for (string airport_code: airports_source) {
+            for (string t: airports_target) {
                 for (auto v: m.f2_shortest_paths(airport_code, t, air)) {
                     res.push_back(v);
                 }
@@ -347,8 +386,8 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
         while(getline(iss, country, ',')) {
             countries.insert(country);
         }
-        for (string airport_code: m.city_airports(source)) {
-            for (string t: m.city_airports(target)) {
+        for (string airport_code: airports_source) {
+            for (string t: airports_target) {
                 for (auto v: m.f3_shortest_paths(airport_code, t, countries)) {
                     res.push_back(v);
                 }
@@ -356,8 +395,8 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
         }
     }
     else {
-        for (string airport_code: m.city_airports(source)) {
-            for (string t: m.city_airports(target)) {
+        for (string airport_code: airports_source) {
+            for (string t: airports_target) {
                 for (auto v: m.shortest_paths2(airport_code, t)) {
                     res.push_back(v);
                 }
@@ -370,6 +409,7 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
             min = path.size();
         }
     }
+    cout << "The best flight options between those two cities are:" << '\n';
     for (auto path: res) {
         if (path.size() == min) {
             for (int i = 0; i < path.size() - 1; i++) {
@@ -390,10 +430,18 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
  * @param f3 avoid a set of countries filter
  */
 void FlightOption::flight_city_coordinates(std::string source, float lat, float lon, bool f1, bool f2, bool f3) {
-
+    vector<string> airports;
+    if(m.getData().getCity_by_country()[source].size() > 1){
+        cout << "There are " << m.getData().getAirportsByCity()[source].size() << " cities with the same name!" << '\n';
+        cout << "Enter the desired source city's country:";
+        string country;
+        cin >> country;
+        airports = m.city_airports_by_country(source,country);
+    }
+    else{ airports = m.city_airports(source);}
     vector<vector<Vertex<Airport>*>> res;
     if(f1){
-        for(string ap_code_s : m.city_airports(source)) {
+        for(string ap_code_s : airports) {
             for (string ap_code_t: m.findNearestAirports(lat, lon)) {
                 for (auto v: m.f1_shortest_paths(ap_code_s, ap_code_t)) {
                     res.push_back(v);
@@ -412,7 +460,7 @@ void FlightOption::flight_city_coordinates(std::string source, float lat, float 
         while(getline(iss, acode, ',')) {
             air.insert(acode);
         }
-        for(string ap_code_s : m.city_airports(source)) {
+        for(string ap_code_s : airports) {
             for (string ap_code_t: m.findNearestAirports(lat, lon)) {
                 for (auto v: m.f2_shortest_paths(ap_code_s, ap_code_t, air)) {
                     res.push_back(v);
@@ -431,7 +479,7 @@ void FlightOption::flight_city_coordinates(std::string source, float lat, float 
         while(getline(iss, country, ',')) {
             countries.insert(country);
         }
-        for(string ap_code_s : m.city_airports(source)) {
+        for(string ap_code_s : airports) {
             for (string ap_code_t: m.findNearestAirports(lat, lon)) {
                 for (auto v: m.f3_shortest_paths(ap_code_s, ap_code_t, countries)) {
                     res.push_back(v);
@@ -440,7 +488,7 @@ void FlightOption::flight_city_coordinates(std::string source, float lat, float 
         }
     }
     else {
-        for(string ap_code_s : m.city_airports(source)) {
+        for(string ap_code_s : airports) {
             for (string ap_code_t: m.findNearestAirports(lat, lon)) {
                 for (auto v: m.shortest_paths2(ap_code_s, ap_code_t)) {
                     res.push_back(v);
@@ -454,6 +502,7 @@ void FlightOption::flight_city_coordinates(std::string source, float lat, float 
             min = path.size();
         }
     }
+    cout << "The best flight options between those two cities are:" << '\n';
     for(auto path : res){
         if(path.size()==min){
             for(int i = 0; i < path.size() - 1; i++){
@@ -551,10 +600,19 @@ void FlightOption::flight_coordinates_airport(float lat, float lon, std::string 
  * @param f3 avoid a set of countries filter
  */
 void FlightOption::flight_coordinates_city(float lat, float lon, std::string target, bool f1, bool f2, bool f3) {
+    vector<string> airports;
+    if(m.getData().getCity_by_country()[target].size() > 1){
+        cout << "There are " << m.getData().getAirportsByCity()[target].size() << " cities with the same name!" << '\n';
+        cout << "Enter the desired target city's country:";
+        string country;
+        cin >> country;
+        airports = m.city_airports_by_country(target,country);
+    }
+    else{ airports = m.city_airports(target);}
     vector<vector<Vertex<Airport>*>> res;
     if(f1){
         for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-            for (string ap_code_t: m.city_airports(target)) {
+            for (string ap_code_t: airports) {
                 for (auto v: m.f1_shortest_paths(ap_code_s, ap_code_t)) {
                     res.push_back(v);
                 }
@@ -573,7 +631,7 @@ void FlightOption::flight_coordinates_city(float lat, float lon, std::string tar
             air.insert(acode);
         }
         for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-            for (string ap_code_t: m.city_airports(target)) {
+            for (string ap_code_t: airports) {
                 for (auto v: m.f2_shortest_paths(ap_code_s, ap_code_t, air)) {
                     res.push_back(v);
                 }
@@ -592,7 +650,7 @@ void FlightOption::flight_coordinates_city(float lat, float lon, std::string tar
             countries.insert(country);
         }
         for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-            for (string ap_code_t: m.city_airports(target)) {
+            for (string ap_code_t: airports) {
                 for (auto v: m.f3_shortest_paths(ap_code_s, ap_code_t, countries)) {
                     res.push_back(v);
                 }
@@ -601,7 +659,7 @@ void FlightOption::flight_coordinates_city(float lat, float lon, std::string tar
     }
     else {
         for(string ap_code_s : m.findNearestAirports(lat, lon)) {
-            for (string ap_code_t: m.city_airports(target)) {
+            for (string ap_code_t: airports) {
                 for (auto v: m.shortest_paths2(ap_code_s, ap_code_t)) {
                     res.push_back(v);
                 }
@@ -614,6 +672,7 @@ void FlightOption::flight_coordinates_city(float lat, float lon, std::string tar
             min = path.size();
         }
     }
+    cout << "The best flight options between those two cities are:" << '\n';
     for(auto path : res){
         if(path.size()==min){
             for(int i = 0; i < path.size() - 1; i++){

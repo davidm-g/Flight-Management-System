@@ -36,6 +36,16 @@ unordered_map<string, Vertex<Airport>* > Data::getAirports() {
 unordered_map<string, vector<Vertex<Airport>*>> Data::getAirportsByCity(){
     return airports_by_city;
 }
+/**
+  * function that retrieves an unordered_multimap that stores key value pairs
+ * of cities and their corresponding countries, allowing constant lookup of countries by their city - complexity O(1)
+ * @return unordered_map that stores key value pairs
+ * of cities and their corresponding countries
+ */
+unordered_map<string,set<string>> Data::getCity_by_country(){
+    return city_by_country;
+}
+
 
 /**
  * function that parses the data from the airports.csv file and uses it to build a graph accordingly
@@ -63,6 +73,7 @@ void Data::parse_airports() {
         ap.addVertex(  aero_vertex);
         airports[code]=aero_vertex;
         airports_by_city[city].push_back(aero_vertex);
+        city_by_country[city].insert(country);
     }
 
 }

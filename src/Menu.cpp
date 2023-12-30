@@ -19,7 +19,13 @@ Menu::Menu() {
     d.parse_flights();
     d.calculate_indegree();
 }
-
+/**
+ * funcion that returns the data associated with the project
+ * @return data
+ */
+Data Menu::getData(){
+    return this->d;
+}
 
 /**
  * function that retrieves total nr of airports - complexity O(1)
@@ -42,7 +48,7 @@ int Menu::totalFlights(){
 }
 
 /**
- * countries flyable from a given city - complexity O(V * E * log M) where V is the number of vertices, E is the average number of edges per vertex within the specified city, and M is the number of unique countries encountered in these edges.
+ * flyable counties from a given city - complexity O(V * E * log M) where V is the number of vertices, E is the average number of edges per vertex within the specified city, and M is the number of unique countries encountered in these edges.
  * @param city that we fly from
  * @return nr of countries that the city flies to
  */
@@ -61,9 +67,31 @@ int Menu::totalFlights(){
     }
     return count;
 }
+/**
+ * flyable countries from a given city, with its country clarified - complexity O(V * E * log M)
+ * where V is the number of vertices, E is the average number of edges per vertex within the specified city, and M is the number of unique countries encountered in these edges.
+ * @param city that we fly from
+ * @param country of the city that we fly from
+ * @return nr of countries that the city flies to
+ */
+int Menu::num_countries_city2(string city, string country){
+    int count=0;
+    set<string> used_countries;
+    for(auto v : d.getAP().getVertexSet()){
+        if(v->getInfo().getCity() == city && v->getInfo().getCountry() == country){
+            for(auto edge:v->getAdj()){
+                if(used_countries.find(edge.getDest()->getInfo().getCountry())== used_countries.end()){
+                    count++;
+                    used_countries.insert(edge.getDest()->getInfo().getCountry());
+                }
+            }
+        }
+    }
+    return count;
+ }
 
 /**
- * countries flyable from a given airport - complexity O(E * log M) where E is the number of adjacent edges for the specified airport and M is the number of unique countries encountered in these edges.
+ * flyable countries from a given airport - complexity O(E * log M) where E is the number of adjacent edges for the specified airport and M is the number of unique countries encountered in these edges.
  * @param acode of the airport that we fly from
  * @return nr of countries that the airport flies to
  */
@@ -104,7 +132,7 @@ void Menu::numFlightsAirlines(string apcode){
 
 }
 /**
- * retrieves the amount of flights that a city receives and release - complexity O(V) where V is the number of vertices in the graph
+ * returns the amount of in and out flights from a city - complexity O(V) where V is the number of vertices in the graph
  * @param name of the desired city
  * @return the number of in and out flights in a determined city.
  */
@@ -118,7 +146,12 @@ int Menu::num_flights_city(string name){
     }
     return count;
 }
-/*
+/**
+ * returns the amount of in and out flights from a given city and country - complexity O(V) where V is the number of vertices in the graph
+ * @param name of the desired city
+ * @param country of the desired city
+ * @return the number of in and out flights in a determined city.
+ */
 int Menu::num_flights_city_country(string city,string country){
     int count = 0;
     for(auto v : d.getAP().getVertexSet()){
@@ -129,7 +162,7 @@ int Menu::num_flights_city_country(string city,string country){
     }
     return count;
 }
-*/
+
 /**
  * retrieves the amount of flights that an airline does - complexity O(V * E) where V is the number of vertices and E the number of edges in the graph
  * @param acode of the airline
@@ -284,13 +317,22 @@ vector<pair<int,Airport>> Menu::greatest_air_traffic(int k){
  */
 unordered_set<Vertex<Airport>*>Menu::Articu_points(){
     stack<Airport> S;
+    Graph<Airport> temp = d.getAP();
     unordered_set<Vertex<Airport>*> res;
     int index=1;
-    for(auto v : d.getAP().getVertexSet()){
-        v->setVisited(false);
-
+    for(auto v : temp.getVertexSet()){
+        for(auto e : v->getAdj()){
+            temp.addEdge(e.getDest()->getInfo(),v->getInfo(),e.getAirlinecode(),0);
+        }
     }
-    for(auto v : d.getAP().getVertexSet()){
+    for(auto v : temp.getVertexSet()){
+        v->setVisited(false);
+        v->setProcessing(false);
+        v->setLow(0);
+        v->setNum(0);
+    }
+
+    for(auto v : temp.getVertexSet()){
         if(!v->isVisited()){
             index=1;
             dfs_arti(v,S,res,index);
@@ -320,7 +362,7 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, unordered_set<Vertex<
             children++;
             dfs_arti(w, s, res, i);
             v->setLow(min(v->getLow(), w->getLow()));
-            if ((v->getNum() != 1 && (w->getLow() >= v->getNum())) || (v->getNum()==1 && children > 1))
+            if ((v->getNum() != 1 && (w->getLow() >= v->getNum())))
                 res.insert(v);
 
         }
@@ -328,6 +370,10 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, unordered_set<Vertex<
             v->setLow(min(v->getLow(),w->getNum()));
         }
 
+
+    }
+    if(v->getNum()==1 && children > 1){
+        res.insert(v);
     }
     s.pop();
     v->setProcessing(false);
@@ -408,17 +454,20 @@ vector<string> Menu::city_airports(string city){
     }
     return res;
 }
-/*
-vector<string> Menu::city_airport_bycountry(string city, string country){
+/**
+ * function to know the airports in a determined city by a determined country - complexity O(V) where V is the number of vertices in the graph
+ * @param city the name of the city
+ * @return vector of airport codes that are established on a given city
+ */
+vector<string> Menu::city_airports_by_country(string city,string country){
     vector<string> res;
     for(auto vertex: d.getAP().getVertexSet()){
-        if(vertex->getInfo().getCity()==city && vertex->getInfo().getCountry() == country){}
+        if(vertex->getInfo().getCity()==city && vertex->getInfo().getCountry()==country)
             res.push_back(vertex->getInfo().getCode());
     }
     return res;
 }
 
-*/
 /**
  * function to know the distance between two airports, by using its coordinates - complexity O(1)
  * @param lat1 latitude of 1st airport

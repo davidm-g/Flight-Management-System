@@ -3,6 +3,7 @@
 //
 
 #include "graph.h"
+#include <set>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -24,6 +25,7 @@ class Data {
         std::unordered_map<string,Airline> airlines;
         std::unordered_map<string,Vertex<Airport>*> airports;
         std::unordered_map<string,vector<Vertex<Airport>*>> airports_by_city;
+        std::unordered_map<string,set<string>> city_by_country;
     public:
         void parse_airports();
         Graph<Airport> getAP();
@@ -33,6 +35,7 @@ class Data {
         unordered_map<string, Vertex<Airport>*> getAirports();
         unordered_map<string, vector<Vertex<Airport>*>> getAirportsByCity();
         void calculate_indegree();
+        unordered_map<string,set<string>> getCity_by_country();
 };
 
 

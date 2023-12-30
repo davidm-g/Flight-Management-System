@@ -37,16 +37,15 @@ public:
     unordered_set<Vertex<Airport>*> Articu_points();
     void dfs_arti(Vertex<Airport>* v, stack<Airport>& s, unordered_set<Vertex<Airport>*>& res, int& i);
     vector<string> findNearestAirports(double lat, double lon);
-    vector<std::vector<Airport>> shortest_paths(string start,string end);
     vector<string> city_airports(string city);
     vector<vector<Vertex<Airport>*>> f1_shortest_paths(string start, string target);
     vector<vector<Vertex<Airport>*>> shortest_paths2(string source, string target);
     vector<vector<Vertex<Airport>*>> f2_shortest_paths(string start, string target, set<string> air);
     vector<vector<Vertex<Airport>*>> f3_shortest_paths(string start, string target, set<string> countries);
-    //Data getData();
-    //vector<string> city_airport_bycountry(string city, string country);
-
-    //int num_flights_city_country(string city, string country);
+    Data getData();
+    int num_flights_city_country(string city, string country);
+    int num_countries_city2(string city, string country);
+    vector<string> city_airports_by_country(string city,string country);
 };
 
 
