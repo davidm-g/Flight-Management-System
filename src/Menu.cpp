@@ -55,6 +55,7 @@ int Menu::totalFlights(){
  int Menu::num_countries_city(std::string city){
     int count=0;
     set<string> used_countries;
+
     for(auto v : d.getAP().getVertexSet()){
         if(v->getInfo().getCity() == city){
             for(auto edge:v->getAdj()){
@@ -79,6 +80,7 @@ int Menu::num_countries_city2(string city, string country){
     set<string> used_countries;
     for(auto v : d.getAP().getVertexSet()){
         if(v->getInfo().getCity() == city && v->getInfo().getCountry() == country){
+
             for(auto edge:v->getAdj()){
                 if(used_countries.find(edge.getDest()->getInfo().getCountry())== used_countries.end()){
                     count++;
@@ -327,9 +329,6 @@ unordered_set<Vertex<Airport>*>Menu::Articu_points(){
     }
     for(auto v : temp.getVertexSet()){
         v->setVisited(false);
-        v->setProcessing(false);
-        v->setLow(0);
-        v->setNum(0);
     }
 
     for(auto v : temp.getVertexSet()){
@@ -362,7 +361,7 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, unordered_set<Vertex<
             children++;
             dfs_arti(w, s, res, i);
             v->setLow(min(v->getLow(), w->getLow()));
-            if ((v->getNum() != 1 && (w->getLow() >= v->getNum())))
+            if ((v->getNum() != 1 && (w->getLow() >= v->getNum())) || (v->getNum()==1 && children > 1))
                 res.insert(v);
 
         }
@@ -370,10 +369,6 @@ void Menu::dfs_arti(Vertex<Airport>* v, stack<Airport>& s, unordered_set<Vertex<
             v->setLow(min(v->getLow(),w->getNum()));
         }
 
-
-    }
-    if(v->getNum()==1 && children > 1){
-        res.insert(v);
     }
     s.pop();
     v->setProcessing(false);

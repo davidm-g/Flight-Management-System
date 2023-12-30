@@ -33,7 +33,7 @@ void FlightOption::flight_airport_airport(std::string source, std::string target
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airline codes followed by a ',':";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -47,7 +47,7 @@ void FlightOption::flight_airport_airport(std::string source, std::string target
     else if (f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -61,6 +61,11 @@ void FlightOption::flight_airport_airport(std::string source, std::string target
     else {
         temp = m.shortest_paths2(source,target);
     }
+    if(temp.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
+    }
+    cout << "The best flight options between those two airports are:" << '\n';
     for (auto v: temp) {
         for (int i = 0; i < v.size() - 1; i++) {
             cout << v[i]->getInfo().getName() << " --> ";
@@ -82,7 +87,7 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
     vector<vector<Vertex<Airport>*>> res;
     vector<string> airports;
     if(m.getData().getCity_by_country()[target].size() > 1){
-        cout << "There are " << m.getData().getAirportsByCity()[target].size() << " cities with the same name!" << '\n';
+        cout << "There are " << m.getData().getCity_by_country()[target].size() << " cities with the same name!" << '\n';
         cout << "Enter the desired target city's country:";
         string country;
         cin >> country;
@@ -100,7 +105,7 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airlines code:";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -117,7 +122,7 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
     else if(f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -144,6 +149,10 @@ void FlightOption::flight_airport_city(std::string source, std::string target, b
         if (path.size() <= min) {
             min = path.size();
         }
+    }
+    if(res.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
     }
     cout << "The best flight options between that airport and that city are:" << '\n';
     for(auto path : res){
@@ -177,7 +186,7 @@ void FlightOption::flight_airport_coordinates(std::string source, float lat, flo
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airlines code:";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -194,7 +203,7 @@ void FlightOption::flight_airport_coordinates(std::string source, float lat, flo
     else if(f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -221,6 +230,11 @@ void FlightOption::flight_airport_coordinates(std::string source, float lat, flo
             min = path.size();
         }
     }
+    if(res.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
+    }
+    cout << "The best flight options between those two cities are:" << '\n';
     for(auto path : res){
         if(path.size()==min){
             for(int i = 0; i < path.size() - 1; i++){
@@ -243,14 +257,14 @@ void FlightOption::flight_airport_coordinates(std::string source, float lat, flo
 void FlightOption::flight_city_airport(std::string source, std::string target, bool f1, bool f2, bool f3) {
     vector<vector<Vertex<Airport>*>> res;
     vector<string> airports;
-    if(m.getData().getCity_by_country()[target].size() > 1){
-        cout << "There are " << m.getData().getAirportsByCity()[target].size() << " cities with the same name!" << '\n';
+    if(m.getData().getCity_by_country()[source].size() > 1){
+        cout << "There are " << m.getData().getCity_by_country()[source].size() << " cities with the same name!" << '\n';
         cout << "Enter the desired source city's country:";
         string country;
         cin >> country;
         airports = m.city_airports_by_country(target,country);
     }
-    else{ airports = m.city_airports(target);}
+    else{ airports = m.city_airports(source);}
     if(f1){
         for(string airport_code : airports) {
             for (auto v: m.f1_shortest_paths(airport_code, target)) {
@@ -261,7 +275,7 @@ void FlightOption::flight_city_airport(std::string source, std::string target, b
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airlines code:";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -278,7 +292,7 @@ void FlightOption::flight_city_airport(std::string source, std::string target, b
     else if(f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -305,6 +319,10 @@ void FlightOption::flight_city_airport(std::string source, std::string target, b
             min = path.size();
         }
     }
+    if(res.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
+    }
     cout << "The best flight options between that city and that airport are:" << '\n';
     for(auto path : res){
         if(path.size()==min){
@@ -329,7 +347,7 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
     vector<string> airports_source;
     vector<string> airports_target;
     if(m.getData().getCity_by_country()[source].size() > 1){
-        cout << "There are " << m.getData().getAirportsByCity()[source].size() << " source cities with the same name!" << '\n';
+        cout << "There are " << m.getData().getCity_by_country()[source].size() << " source cities with the same name!" << '\n';
         cout << "Enter the desired source city's country:";
         string country;
         cin >> country;
@@ -339,7 +357,7 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
 
 
     if(m.getData().getCity_by_country()[target].size() > 1){
-        cout << "There are " << m.getData().getAirportsByCity()[target].size() << " target cities with the same name!" << '\n';
+        cout << "There are " << m.getData().getCity_by_country()[target].size() << " target cities with the same name!" << '\n';
         cout << "Enter the desired target city's country:";
         string country;
         cin >> country;
@@ -359,7 +377,7 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airlines code:";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -378,7 +396,7 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
     else if(f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -409,6 +427,10 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
             min = path.size();
         }
     }
+    if(res.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
+    }
     cout << "The best flight options between those two cities are:" << '\n';
     for (auto path: res) {
         if (path.size() == min) {
@@ -432,7 +454,7 @@ void FlightOption::flight_city_city(std::string source, std::string target, bool
 void FlightOption::flight_city_coordinates(std::string source, float lat, float lon, bool f1, bool f2, bool f3) {
     vector<string> airports;
     if(m.getData().getCity_by_country()[source].size() > 1){
-        cout << "There are " << m.getData().getAirportsByCity()[source].size() << " cities with the same name!" << '\n';
+        cout << "There are " << m.getData().getCity_by_country()[source].size() << " cities with the same name!" << '\n';
         cout << "Enter the desired source city's country:";
         string country;
         cin >> country;
@@ -452,7 +474,7 @@ void FlightOption::flight_city_coordinates(std::string source, float lat, float 
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airlines code:";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -471,7 +493,7 @@ void FlightOption::flight_city_coordinates(std::string source, float lat, float 
     else if(f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -501,6 +523,10 @@ void FlightOption::flight_city_coordinates(std::string source, float lat, float 
         if (path.size() <= min) {
             min = path.size();
         }
+    }
+    if(res.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
     }
     cout << "The best flight options between those two cities are:" << '\n';
     for(auto path : res){
@@ -535,7 +561,7 @@ void FlightOption::flight_coordinates_airport(float lat, float lon, std::string 
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airlines code:";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -552,7 +578,7 @@ void FlightOption::flight_coordinates_airport(float lat, float lon, std::string 
     else if(f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -579,6 +605,11 @@ void FlightOption::flight_coordinates_airport(float lat, float lon, std::string 
             min = path.size();
         }
     }
+    if(res.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
+    }
+    cout << "The best flight options between those two cities are:" << '\n';
     for(auto path : res){
         if(path.size()==min){
             for(int i = 0; i < path.size() - 1; i++){
@@ -602,7 +633,7 @@ void FlightOption::flight_coordinates_airport(float lat, float lon, std::string 
 void FlightOption::flight_coordinates_city(float lat, float lon, std::string target, bool f1, bool f2, bool f3) {
     vector<string> airports;
     if(m.getData().getCity_by_country()[target].size() > 1){
-        cout << "There are " << m.getData().getAirportsByCity()[target].size() << " cities with the same name!" << '\n';
+        cout << "There are " << m.getData().getCity_by_country()[target].size() << " cities with the same name!" << '\n';
         cout << "Enter the desired target city's country:";
         string country;
         cin >> country;
@@ -622,7 +653,7 @@ void FlightOption::flight_coordinates_city(float lat, float lon, std::string tar
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airlines code:";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -641,7 +672,7 @@ void FlightOption::flight_coordinates_city(float lat, float lon, std::string tar
     else if(f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -671,6 +702,10 @@ void FlightOption::flight_coordinates_city(float lat, float lon, std::string tar
         if (path.size() <= min) {
             min = path.size();
         }
+    }
+    if(res.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
     }
     cout << "The best flight options between those two cities are:" << '\n';
     for(auto path : res){
@@ -708,7 +743,7 @@ void FlightOption::flight_coordinates_coordinates(float lat1, float lon1, float 
     else if(f2){
         set<string> air;
         string acode;
-        cout << "Please insert the preferred airlines code:";
+        cout << "Please insert the preferred airline codes separated by a ',':";
         string line;
         getline(cin, line);
         air.insert(acode);
@@ -727,7 +762,7 @@ void FlightOption::flight_coordinates_coordinates(float lat1, float lon1, float 
     else if(f3){
         set<string> countries;
         string country;
-        cout << "Please insert the countries to avoid:";
+        cout << "Please insert the countries to avoid separated by a ',':";
         string line;
         getline(cin, line);
         countries.insert(country);
@@ -758,6 +793,11 @@ void FlightOption::flight_coordinates_coordinates(float lat1, float lon1, float 
             min = path.size();
         }
     }
+    if(res.empty()){
+        cout << "There are no flights between these two locations\n\n";
+        return;
+    }
+    cout << "The best flight options between those two cities are:" << '\n';
     for(auto path : res){
         if(path.size()==min){
             for(int i = 0; i < path.size() - 1; i++){

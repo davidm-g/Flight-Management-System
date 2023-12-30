@@ -28,13 +28,13 @@ unordered_map<string, Vertex<Airport>* > Data::getAirports() {
     return airports;
 }
 /**
-  * function that retrieves an unordered_multimap that stores key value pairs
- * of cities and their corresponding Airports, allowing constant lookup of Airports by their city - complexity O(1)
+  * function that retrieves an unordered_map that stores key value pairs
+ * of airport names and their corresponding Airports, allowing constant lookup of Airports by their city - complexity O(1)
  * @return unordered_map that stores key value pairs
- * of cities and their corresponding Airports
+ * of airport names and their corresponding Airports
  */
-unordered_map<string, vector<Vertex<Airport>*>> Data::getAirportsByCity(){
-    return airports_by_city;
+unordered_map<string,Vertex<Airport>*> Data::getAirportsName() {
+    return airports_names;
 }
 /**
   * function that retrieves an unordered_multimap that stores key value pairs
@@ -72,8 +72,8 @@ void Data::parse_airports() {
         Vertex<Airport>* aero_vertex =  new Vertex<Airport>(aero);
         ap.addVertex(  aero_vertex);
         airports[code]=aero_vertex;
-        airports_by_city[city].push_back(aero_vertex);
         city_by_country[city].insert(country);
+        airports_names[name]=aero_vertex;
     }
 
 }

@@ -12,7 +12,7 @@ int main() {
     bool filter_avoid_countries = false;
     while (true) {
         cout << " _________________________________________ " << '\n';
-        cout << "|      Flight Management System           |" << '\n';
+        cout << "|        Flight Management System         |" << '\n';
         cout << "|                                         |" << '\n';
         cout << "|1.  Nr of airports                       |" << '\n';
         cout << "|2.  Nr of flights                        |" << '\n';
@@ -24,18 +24,18 @@ int main() {
         cout << "|7.  Reachable destinations with x stops  |" << '\n';
         cout << "|8.  Maximum trip                         |" << '\n';
         cout << "|9.  Top-k airports by air traffic        |" << '\n';
-        cout << "|10. Articulation points                  |" << '\n';
+        cout << "|10. Essential Airports                   |" << '\n';
         cout << "|11. Best flight option                   |" << '\n';
         cout << "|12. Flight filters configurations        |" << '\n';
         cout << "|13. Exit                                 |" << '\n';
         if(filter_min_airlines)
-        cout << "|FILTER MINIMUM AIRLINES ENABLED          |" << '\n';
+        cout << "|     FILTER MINIMUM AIRLINES ENABLED     |" << '\n';
         else if(filter_airlines_list)
-        cout << "|FILTER AIRLINES LIST ENABLED             |" << '\n';
+        cout << "|       FILTER AIRLINES LIST ENABLED      |" << '\n';
         else if(filter_avoid_countries)
-        cout << "|FILTER AVOID COUNTRIES ENABLED           |" << '\n';
+        cout << "|     FILTER AVOID COUNTRIES ENABLED      |" << '\n';
         else
-        cout << "|FILTERS DISABLED                         |" << '\n';
+        cout << "|            FILTERS DISABLED             |" << '\n';
         cout << "|_________________________________________|" << "\n";
         cout << "Please enter your choice:";
         cin >> choice;
@@ -57,7 +57,8 @@ int main() {
                 string acode;
                 cout << "Type in the wanted airport code:";
                 cin >> acode;
-                m.numFlightsAirlines(acode);
+                if(m.getData().getAirports().find(acode) != m.getData().getAirports().end()) m.numFlightsAirlines(acode);
+                else cout << "There is no such airport code!\n";
                 break;
             }
             case 4:{
@@ -68,18 +69,23 @@ int main() {
                 cin>>escolha;
                 cin.ignore();
                 switch (escolha) {
-                    case 1:{
-                        cout<<"Enter the desired city:";
+                    case 1: {
+                        cout << "Enter the desired city:";
                         string city;
-                        getline(cin,city);
-                        if(m.getData().getCity_by_country()[city].size() > 1) {
-                            cout << "There are " << m.getData().getAirportsByCity()[city].size() << " cities with the same name!" << '\n';
+                        getline(cin, city);
+                        if (m.getData().getCity_by_country().find(city) == m.getData().getCity_by_country().end()){
+                            cout << "There is no such city!\n";
+                            break;
+                        }
+                        if (m.getData().getCity_by_country()[city].size() > 1) {
+                            cout << "There are " << m.getData().getCity_by_country()[city].size()
+                                 << " cities with the same name!" << '\n';
                             cout << "Enter the desired city's country:";
                             string country;
                             cin >> country;
-                            cout << "There are "<<m.num_flights_city_country(city,country)<<" in and out flights from/to "<< city << ", "<< country<< '\n' << '\n';
-                        }
-                        else {
+                            cout << "There are " << m.num_flights_city_country(city, country)
+                                 << " in and out flights from/to " << city << ", " << country << '\n' << '\n';
+                        } else {
                             cout << "The number of in and out flights from/to " << city << " is : "
                                  << m.num_flights_city(city) << '\n' << '\n';
                         }
@@ -89,6 +95,10 @@ int main() {
                         cout << "Enter the desired airline code:";
                         string acode;
                         cin >> acode;
+                        if(m.getData().getAirlines().find(acode) == m.getData().getAirlines().end()){
+                            cout << "There is no such airline code!\n";
+                            break;
+                        }
                         cout << "The airline " << acode <<" operates in total : " << m.num_flights_airlines(acode) << " flights\n" << '\n';
                         break;
                     }
@@ -111,8 +121,12 @@ int main() {
                         cout << "Enter the desired city:";
                         string city;
                         getline(cin,city);
+                        if (m.getData().getCity_by_country().find(city) == m.getData().getCity_by_country().end()){
+                            cout << "There is no such city!\n";
+                            break;
+                        }
                         if(m.getData().getCity_by_country()[city].size() > 1){
-                            cout << "There are " << m.getData().getAirportsByCity()[city].size() << " cities with the same name!" << '\n';
+                            cout << "There are " << m.getData().getCity_by_country()[city].size() << " cities with the same name!" << '\n';
                             cout << "Enter the desired city's country:";
                             string country;
                             cin >> country;
@@ -128,7 +142,11 @@ int main() {
                         cout << "Enter the desired airport code:";
                         string acode;
                         cin >> acode;
-                        cout << "The airport " << acode << " flies to "  << m.num_countries_airport(acode) << " different countries\n";
+                        if(m.getData().getAirports().find(acode) == m.getData().getAirports().end()){
+                            cout << "There is no such airport code!\n";
+                            break;
+                        }
+                        cout << "The airport " << m.getData().getAirports()[acode]->getInfo().getName() << " flies to "  << m.num_countries_airport(acode) << " different countries\n";
                         break;
                     }
                     default: {
@@ -142,6 +160,10 @@ int main() {
                 string acode;
                 cout << "Please enter the desire airport code:";
                 cin >> acode;
+                if(m.getData().getAirports().find(acode) == m.getData().getAirports().end()){
+                    cout << "There is no such airport code!\n";
+                    break;
+                }
                 m.dfs_Des(acode);
                 break;
             }
@@ -149,6 +171,10 @@ int main() {
                 string acode;
                 cout << "Please enter the desired airport code:";
                 cin >> acode;
+                if(m.getData().getAirports().find(acode) == m.getData().getAirports().end()){
+                    cout << "There is no such airport code!\n";
+                    break;
+                }
                 int max_stops;
                 cout << "Please enter the maximum number of lay-overs:";
                 cin >> max_stops;
@@ -156,11 +182,14 @@ int main() {
                 break;
             }
             case 8:{
-                cout << "The maximum number of stops between two airports is: "<<m.graph_diameter()[0].first<<'\n';
+                cout << "The maximum number of stops between two airports is: "<< m.graph_diameter()[0].first<<'\n';
+                int count = 0;
                 for(auto p : m.graph_diameter()){
                     cout << "And that distance is between " << p.second.first.getName()
                     << " and "<< p.second.second.getName() << " airports\n";
+                    count++;
                 }
+                cout << '\n' << "And there are " << count << " flights with this size." << '\n';
                 break;
             }
             case 9: {
@@ -204,15 +233,23 @@ int main() {
                 cin.ignore();
                 switch (so) {
                     case 1:{
-
                         cout << "Insert a source airport code/name:";
                         string source;
                         getline(cin,source);
+                        if((m.getData().getAirports().find(source) == m.getData().getAirports().end()) &&
+                                (m.getData().getAirportsName().find(source) == m.getData().getAirportsName().end())){
+                            cout << "There is no such source airport!\n";
+                            break;
+                        }
                         cout << "Insert a target airport code/name:";
                         string target;
                         getline(cin,target);
+                        if((m.getData().getAirports().find(target) == m.getData().getAirports().end()) &&
+                           (m.getData().getAirportsName().find(target) == m.getData().getAirportsName().end())){
+                            cout << "There is no such target airport!\n";
+                            break;
+                        }
                         cout << '\n';
-                        cout << "The best flight options between those two airports are:" << '\n';
                         f.flight_airport_airport(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         break;
                     }
@@ -221,9 +258,18 @@ int main() {
                         cout << "Insert a source airport code/name:";
                         string source;
                         getline(cin,source);
+                        if((m.getData().getAirports().find(source) == m.getData().getAirports().end()) &&
+                           (m.getData().getAirportsName().find(source) == m.getData().getAirportsName().end())){
+                            cout << "There is no such source airport!\n";
+                            break;
+                        }
                         cout << "Insert a target city:";
                         string target;
                         getline(cin,target);
+                        if (m.getData().getCity_by_country().find(target) == m.getData().getCity_by_country().end()){
+                            cout << "There is no such target city!\n";
+                            break;
+                        }
                         cout << '\n';
                         f.flight_airport_city(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //airport ---> city
@@ -234,14 +280,26 @@ int main() {
                         string source;
                         cout << "Insert a source airport code/name:";
                         cin >> source;
+                        if((m.getData().getAirports().find(source) == m.getData().getAirports().end()) &&
+                           (m.getData().getAirportsName().find(source) == m.getData().getAirportsName().end())){
+                            cout << "There is no such source airport!\n";
+                            break;
+                        }
                         float lat, lon;
                         cout << "Insert the latitude of the target airport:";
                         cin >> lat;
-                        cout << '\n';
+                        if(lat < -90 || lat > 90){
+                            cout << "Insert a valid value for latitude [-90, 90]" << '\n';
+                            break;
+                        }
                         cout << "Insert the longitude of the target airport:";
                         cin >> lon;
+                        if(lon < -180 || lon > 180){
+                            cout << "Insert a valid value for longitude [-180, 180]" << '\n';
+                            break;
+                        }
                         cout << '\n';
-                        cout << "The best flight options between those two cities are:" << '\n';
+                        cin.ignore();
                         f.flight_airport_coordinates(source,lat,lon,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
 
                         //airport ---> coordinates
@@ -251,9 +309,18 @@ int main() {
                         cout << "Insert a source city:";
                         string source;
                         getline(cin,source);
+                        if (m.getData().getCity_by_country().find(source) == m.getData().getCity_by_country().end()){
+                            cout << "There is no such source city!\n";
+                            break;
+                        }
                         cout << "Insert a target airport code/name:";
                         string target;
                         getline(cin,target);
+                        if((m.getData().getAirports().find(target) == m.getData().getAirports().end()) &&
+                           (m.getData().getAirportsName().find(target) == m.getData().getAirportsName().end())){
+                            cout << "There is no such target airport!\n";
+                            break;
+                        }
                         cout << '\n';
                         f.flight_city_airport(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //city ---> airport
@@ -263,9 +330,17 @@ int main() {
                         cout << "Insert a source city:";
                         string source;
                         getline(cin, source);
+                        if (m.getData().getCity_by_country().find(source) == m.getData().getCity_by_country().end()){
+                            cout << "There is no such source city!\n";
+                            break;
+                        }
                         cout << "Insert a target city:";
                         string target;
                         getline(cin, target);
+                        if (m.getData().getCity_by_country().find(target) == m.getData().getCity_by_country().end()){
+                            cout << "There is no such target city!\n";
+                            break;
+                        }
                         cout << '\n';
                         f.flight_city_city(source,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //city ---> city
@@ -275,11 +350,24 @@ int main() {
                         string source;
                         cout << "Insert a source city:";
                         cin >> source;
+                        if (m.getData().getCity_by_country().find(source) == m.getData().getCity_by_country().end()){
+                            cout << "There is no such source city!\n";
+                            break;
+                        }
                         float lat, lon;
                         cout << "Insert the latitude of the target airport:";
                         cin >> lat;
+                        if(lat < -90 || lat > 90){
+                            cout << "Insert a valid value for latitude [-90, 90]" << '\n';
+                            break;
+                        }
                         cout << "Insert the longitude of the target airport:";
                         cin >> lon;
+                        cin.ignore();
+                        if(lon < -180 || lon > 180){
+                            cout << "Insert a valid value for longitude [-180, 180]" << '\n';
+                            break;
+                        }
                         cout << '\n';
                         f.flight_city_coordinates(source,lat,lon,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //city ---> coordinates
@@ -289,13 +377,27 @@ int main() {
                         float lat, lon;
                         cout << "Insert the latitude of the source airport:";
                         cin >> lat;
+                        if(lat < -90 || lat > 90){
+                            cout << "Insert a valid value for latitude [-90, 90]" << '\n';
+                            break;
+                        }
                         cout << "Insert the longitude of the source airport:";
                         cin >> lon;
+                        cin.ignore();
+                        if(lon < -180 || lon > 180){
+                            cout << "Insert a valid value for longitude [-180, 180]" << '\n';
+                            break;
+                        }
+                        cout << '\n';
                         string target;
                         cout << "Insert a target airport code/name:";
                         cin >> target;
+                        if((m.getData().getAirports().find(target) == m.getData().getAirports().end()) &&
+                           (m.getData().getAirportsName().find(target) == m.getData().getAirportsName().end())){
+                            cout << "There is no such target airport!\n";
+                            break;
+                        }
                         cout << '\n';
-                        cout << "The best flight options between those two cities are:" << '\n';
                         f.flight_coordinates_airport(lat,lon,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //coordinates ---> airport
                         break;
@@ -304,29 +406,61 @@ int main() {
                         float lat, lon;
                         cout << "Insert the latitude of the source airport:";
                         cin >> lat;
+                        if(lat < -90 || lat > 90){
+                            cout << "Insert a valid value for latitude [-90, 90]" << '\n';
+                            break;
+                        }
                         cout << "Insert the longitude of the source airport:";
                         cin >> lon;
+
+                        if(lon < -180 || lon > 180){
+                            cout << "Insert a valid value for longitude [-180, 180]" << '\n';
+                            break;
+                        }
+                        cout << '\n';
                         string target;
                         cout << "Insert a target city:";
                         cin >> target;
+                        if (m.getData().getCity_by_country().find(target) == m.getData().getCity_by_country().end()){
+                            cout << "There is no such target city!\n";
+                            break;
+                        }
                         cout << '\n';
+                        cin.ignore();
                         f.flight_coordinates_city(lat,lon,target,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //coordinates ---> city
                         break;
                     }
                     case 9:{
-                        double lat1, lon1;
+                        float lat1, lon1;
                         cout << "Insert the latitude of the source airport:";
                         cin >> lat1;
+                        if(lat1 < -90 || lat1 > 90){
+                            cout << "Insert a valid value for latitude [-90, 90]" << '\n';
+                            break;
+                        }
                         cout << "Insert the longitude of the source airport:";
                         cin >> lon1;
+                        if(lon1 < -180 || lon1 > 180){
+                            cout << "Insert a valid value for longitude [-180, 180]" << '\n';
+                            break;
+                        }
+                        cout << '\n';
                         float lat2, lon2;
                         cout << "Insert the latitude of the target airport:";
                         cin >> lat2;
+                        if(lat2 < -90 || lat2 > 90){
+                            cout << "Insert a valid value for latitude [-90, 90]" << '\n';
+                            break;
+                        }
                         cout << "Insert the longitude of the target airport:";
                         cin >> lon2;
+                        cin.ignore();
+                        if(lon2 < -180 || lon2 > 180){
+                            cout << "Insert a valid value for longitude [-180, 180]" << '\n';
+                            break;
+                        }
                         cout << '\n';
-                        cout << "The best flight options between those two cities are:" << '\n';
                         f.flight_coordinates_coordinates(lat1,lon1,lat2,lon2,filter_min_airlines,filter_airlines_list,filter_avoid_countries);
                         //coordinates ---> coordinates
                         break;
