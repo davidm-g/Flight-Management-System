@@ -10,7 +10,7 @@
 
 using namespace std;
 /**
- * Menu constructor - parse the csv files
+ * Menu constructor - parse the csv files and calculates the indegree of each vertex
  */
 Menu::Menu() {
     this->d = Data();
@@ -129,7 +129,7 @@ void Menu::numFlightsAirlines(string apcode){
             used_airlines.insert(edge.getAirlinecode());
         }
     }
-    cout << n_voos << " flights out of " << apcode << " airport from "
+    cout << n_voos << " flights out of " << d.getAirports()[apcode]->getInfo().getName() << " airport from "
          << n_airlines << " different airlines." << '\n';
 
 }

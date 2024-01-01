@@ -29,7 +29,7 @@ unordered_map<string, Vertex<Airport>* > Data::getAirports() {
 }
 /**
   * function that retrieves an unordered_map that stores key value pairs
- * of airport names and their corresponding Airports, allowing constant lookup of Airports by their city - complexity O(1)
+ * of airport names and their corresponding Airports, allowing constant lookup of Airports by their names - complexity O(1)
  * @return unordered_map that stores key value pairs
  * of airport names and their corresponding Airports
  */
